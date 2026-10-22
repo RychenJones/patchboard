@@ -30,8 +30,24 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/20/26 | 11:25    | IM     | Started learning about TypeScript.         | 60          |
 | 10/21/26 | 10:15    | TP     | Worked on project together - Detail modal  | 60          |
 | 10/21/26 | 6:45     | IM     | Learned more about TypeScript.             | 30          |
-| 10/21/26 | 11:50    | IM     |                                            |             |
+| 10/21/26 | 11:50    | IM     | Setup repo and installed TS and express.js.| 30          |
 |          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+|          |          |        |                                            |             |
+
 
 _Note: Add more rows as needed._
 
@@ -39,7 +55,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         | 1:30/10                  |
+|IM - Individual Module         | 2:00/10                  |
 |TP - Team Project              | 1:00/4                   |
 |MTG - Class Meetings           | 1:00/4                   |
-|**TOTAL**                      | 3:30/18                  |
+|**TOTAL**                      | 4:00/18                  |
