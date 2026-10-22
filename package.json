@@ -4,6 +4,8 @@
   "description": "PatchBoard is a basic applicaiton to keep track of software projects and their known bugs and problems waiting to be patched. Each issue has a status indicator indicating whether it is waiting for a patch, in progress, or patched.",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +24,8 @@
     "express": "^5.3.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
   }
 }
