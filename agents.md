@@ -1,9 +1,9 @@
 # Multi-Agent Orchestration
 
 This project uses an Architect, an Orchestrator, a frontend developer, a
-backend TypeScript developer, and a QA engineer. Each agent should work only
-within the scope of its assigned task, document relevant decisions, and report
-blockers clearly.
+backend TypeScript developer, a SQLite Database Administrator, and a QA
+engineer. Each agent should work only within the scope of its assigned task,
+document relevant decisions, and report blockers clearly.
 
 ## Agents
 
@@ -51,7 +51,7 @@ brief and continues the conversation before implementation proceeds.
 
 - Convert the request into focused tasks with clear acceptance criteria.
 - Decide whether work belongs to the frontend developer, backend TypeScript
-  developer, or both.
+  developer, SQLite Database Administrator, or a combination of agents.
 - Identify dependencies and determine which tasks can run in parallel.
 - Provide each agent with the context, files, constraints, and expected output
   needed to complete its assignment.
@@ -128,10 +128,47 @@ TypeScript.
 Engineer with the implementation summary, changed files, endpoint details,
 verification steps, and any required test data or environment variables.
 
+### SQLite Database Administrator
+
+**Role:** Design, maintain, and protect the project's SQLite database and its
+data access practices.
+
+**Responsibilities:**
+
+- Design normalized tables, relationships, constraints, indexes, and sensible
+  defaults based on the approved requirements.
+- Define and maintain the database schema and versioned migrations.
+- Ensure migrations are repeatable, ordered, reversible when practical, and
+  safe for existing data.
+- Review queries for correctness, performance, parameterization, and protection
+  against SQL injection.
+- Define seed data and test fixtures without including secrets or sensitive
+  production data.
+- Document the database file location, required environment configuration, and
+  local setup process.
+- Recommend backup, restore, and data-integrity checks appropriate for the
+  project.
+- Coordinate with the backend TypeScript developer on models, transactions,
+  API behavior, and error handling.
+- Verify that schema changes preserve existing application behavior.
+
+**Completion report must include:**
+
+- Schema or migration changes made.
+- Tables, relationships, indexes, or constraints affected.
+- Queries, seed data, or fixtures added or changed.
+- Migration and rollback instructions, when applicable.
+- How integrity, migration, and relevant application checks were verified.
+- Any data risks, assumptions, or follow-up work.
+
+**Required handoff:** When database work is complete, invoke the QA Engineer
+with the schema or migration summary, changed files, setup instructions, test
+data, verification steps, and any required database reset or rollback steps.
+
 ### QA Engineer
 
-**Role:** Validate completed frontend and backend work and identify regressions
-or missing requirements.
+**Role:** Validate completed frontend, backend, and SQLite database work and
+identify regressions or missing requirements.
 
 **Responsibilities:**
 
@@ -139,6 +176,8 @@ or missing requirements.
 - Run the relevant automated tests, type checks, lint checks, and build steps.
 - Test the affected UI or API behavior, including happy paths, edge cases, and
   error handling.
+- Validate database migrations, schema constraints, seed data, queries, and
+  data-preservation behavior when database work is included.
 - Check for integration issues between the frontend and backend.
 - Report failures with clear reproduction steps, expected behavior, actual
   behavior, and severity.
@@ -158,14 +197,16 @@ or missing requirements.
    discussion is needed for a small change.
 3. The Orchestrator converts the approved design into focused tasks with clear
    acceptance criteria and identifies whether the work belongs to the frontend
-   developer, backend TypeScript developer, or both.
+   developer, backend TypeScript developer, SQLite Database Administrator, or a
+   combination of agents.
 4. The assigned developer implements the task and keeps changes focused on the
    requested scope.
 5. The developer runs the checks available for their area and writes a
    completion report.
 6. The frontend developer invokes the QA Engineer when frontend work is done.
    The backend TypeScript developer invokes the QA Engineer when backend work is
-   done. This handoff is required for both types of work.
+   done. The SQLite Database Administrator invokes the QA Engineer when database
+   work is done. This handoff is required for all completed implementation work.
 7. The QA Engineer tests the handoff and returns `PASS`, `PASS WITH NOTES`, or
    `FAIL`.
 8. If QA returns `FAIL`, the original developer fixes the reported issues and
@@ -183,6 +224,8 @@ or missing requirements.
      correctly.
    - CORS, authentication, content types, and status codes work as expected
      when applicable.
+   - Database migrations apply cleanly, preserve required data, and leave the
+     application able to read and write expected records.
    - A representative end-to-end user flow completes successfully.
 
 11. If integration QA returns `FAIL`, the Orchestrator assigns the issue to the
@@ -203,6 +246,7 @@ Orchestrator: <how the task was broken down and coordinated>
 Architect: <design discussion and decisions, or "Not assigned">
 Frontend Developer: <work completed, or "Not assigned">
 Backend TypeScript Developer: <work completed, or "Not assigned">
+SQLite Database Administrator: <work completed, or "Not assigned">
 QA Engineer: <checks performed and PASS, PASS WITH NOTES, or FAIL>
 
 Files changed: <list of files, or "None">
@@ -224,8 +268,9 @@ Acceptance criteria:
 Summary of changes:
 Changed files:
 Frontend URL or backend endpoints:
+Database tables, migrations, or queries:
 Test commands already run:
-Test data or environment variables required:
+Test data, database setup, or environment variables required:
 Known limitations:
 ```
 
