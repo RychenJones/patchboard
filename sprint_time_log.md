@@ -33,8 +33,8 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/21/26 | 11:50    | IM     | Setup repo and installed TS and express.js.| 30          |
 | 10/22/26 | 2:30     | IM     | Learned about express.js and routing.      | 60          |
 | 10/23/26 | 10:15    | TP     | Set program to get photos from PocketBase. | 60          |
-| 10/23/26 | 5:50     | IM     |                                            |             |
-|          |          |        |                                            |             |
+| 10/23/26 | 5:50     | IM     | Made big progress to agents.md.            | 30          |
+| 10/24/26 | 12:05    | IM     | Created db schema and routes to add and get| 30          |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
@@ -56,7 +56,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         | 3:00/10                  |
+|IM - Individual Module         | 4:00/10                  |
 |TP - Team Project              | 2:00/4                   |
 |MTG - Class Meetings           | 1:00/4                   |
-|**TOTAL**                      | 6:00/18                  |
+|**TOTAL**                      | 7:00/18                  |
