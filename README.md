@@ -24,17 +24,25 @@ PatchBoard was built to learn TypeScript and to get more experience with working
 
 ## Instructions for Build and Use
 
-Steps to build and/or run the software:
+Install and run the backend:
 
-1. First step here
-2.
-3.
+```bash
+cd backend
+npm install
+npm run build
+npm start
+```
 
-Instructions for using the software:
+Install and run the frontend in a second terminal:
 
-1. First step here
-2.
-3.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The backend runs on `http://localhost:3000` and the frontend runs on the Vite
+development URL, usually `http://localhost:5173`.
 
 ## Development Environment
 
