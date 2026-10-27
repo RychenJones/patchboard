@@ -1,4 +1,4 @@
-import type { BugStatus } from "../models/bug";
+import type { BugPriority, BugStatus } from "../models/bug";
 
 export type BugStatusOption = readonly [
   value: BugStatus,
@@ -15,4 +15,19 @@ function isBugStatus(value: unknown): value is BugStatus {
   return BUG_STATUS_OPTIONS.some(([status]) => status === value);
 }
 
-export = { BUG_STATUS_OPTIONS, isBugStatus };
+const BUG_PRIORITY_OPTIONS: readonly BugPriority[] = [
+  "low",
+  "medium",
+  "high",
+];
+
+function isBugPriority(value: unknown): value is BugPriority {
+  return BUG_PRIORITY_OPTIONS.includes(value as BugPriority);
+}
+
+export = {
+  BUG_STATUS_OPTIONS,
+  BUG_PRIORITY_OPTIONS,
+  isBugStatus,
+  isBugPriority,
+};

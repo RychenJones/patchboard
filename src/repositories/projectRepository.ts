@@ -4,6 +4,12 @@ import type { Project } from "../models/project";
 
 const { database } = databaseModule;
 
+const projectSelect = `
+  SELECT id,
+         name,
+         strftime('%Y-%m-%dT%H:%M:%fZ', created_at) AS createdAt
+  FROM projects`;
+
 function createProject(name: string): Promise<Project> {
   return new Promise((resolve, reject) => {
     database.run(
@@ -16,8 +22,7 @@ function createProject(name: string): Promise<Project> {
         }
 
         database.get<Project>(
-          `SELECT id, name, created_at AS createdAt
-           FROM projects
+          `${projectSelect}
            WHERE id = ?`,
           [this.lastID],
           (selectError, project) => {
@@ -42,8 +47,7 @@ function createProject(name: string): Promise<Project> {
 function listProjects(): Promise<Project[]> {
   return new Promise((resolve, reject) => {
     database.all<Project>(
-      `SELECT id, name, created_at AS createdAt
-       FROM projects
+      `${projectSelect}
        ORDER BY id ASC`,
       (error, projects) => {
         if (error) {
@@ -52,6 +56,24 @@ function listProjects(): Promise<Project[]> {
         }
 
         resolve(projects);
+      },
+    );
+  });
+}
+
+function getProject(projectId: number): Promise<Project | null> {
+  return new Promise((resolve, reject) => {
+    database.get<Project>(
+      `${projectSelect}
+       WHERE id = ?`,
+      [projectId],
+      (error, project) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(project ?? null);
       },
     );
   });
@@ -74,4 +96,4 @@ function deleteProject(projectId: number): Promise<boolean> {
   });
 }
 
-export = { createProject, listProjects, deleteProject };
+export = { createProject, listProjects, getProject, deleteProject };

@@ -1,6 +1,6 @@
 import databaseModule = require("./database");
 
-const { database, execute } = databaseModule;
+const { database, execute, queryAll } = databaseModule;
 
 const migrationStatements = [
   "PRAGMA foreign_keys = ON",
@@ -14,6 +14,8 @@ const migrationStatements = [
     project_id INTEGER NOT NULL,
     title TEXT NOT NULL CHECK (length(trim(title)) > 0),
     description TEXT,
+    priority TEXT NOT NULL DEFAULT 'medium'
+      CHECK (priority IN ('low', 'medium', 'high')),
     status TEXT NOT NULL DEFAULT 'incomplete'
       CHECK (status IN ('incomplete', 'in-progress', 'completed')),
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -32,6 +34,19 @@ const migrationStatements = [
     END`,
 ];
 
+async function addPriorityToExistingBugs(): Promise<void> {
+  const columns = await queryAll<{ name: string }>("PRAGMA table_info(bugs)");
+  if (columns.some((column) => column.name === "priority")) {
+    return;
+  }
+
+  await execute(
+    `ALTER TABLE bugs
+     ADD COLUMN priority TEXT NOT NULL DEFAULT 'medium'
+     CHECK (priority IN ('low', 'medium', 'high'))`,
+  );
+}
+
 async function runMigrations(): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     database.serialize(async () => {
@@ -39,6 +54,7 @@ async function runMigrations(): Promise<void> {
         for (const statement of migrationStatements) {
           await execute(statement);
         }
+        await addPriorityToExistingBugs();
         resolve();
       } catch (error) {
         reject(error);

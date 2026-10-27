@@ -2,12 +2,13 @@ import statusModule = require("../constants/bugStatuses");
 import bugRepository = require("../repositories/bugRepository");
 import type {
   Bug,
+  BugPriority,
   BugStatus,
   CreateBugInput,
   UpdateBugInput,
 } from "../models/bug";
 
-const { isBugStatus } = statusModule;
+const { isBugPriority, isBugStatus } = statusModule;
 
 class BugValidationError extends Error {
   readonly statusCode = 400;
@@ -64,6 +65,16 @@ function validateStatus(status: unknown): BugStatus {
   return status ?? "incomplete";
 }
 
+function validatePriority(priority: unknown): BugPriority {
+  if (priority !== undefined && !isBugPriority(priority)) {
+    throw new BugValidationError(
+      "Bug priority must be low, medium, or high.",
+    );
+  }
+
+  return priority ?? "medium";
+}
+
 function validateUpdateInput(input: unknown): UpdateBugInput {
   if (typeof input !== "object" || input === null || Array.isArray(input)) {
     throw new BugValidationError("Bug update must be a JSON object.");
@@ -75,11 +86,12 @@ function validateUpdateInput(input: unknown): UpdateBugInput {
     update,
     "description",
   );
+  const hasPriority = Object.prototype.hasOwnProperty.call(update, "priority");
   const hasStatus = Object.prototype.hasOwnProperty.call(update, "status");
 
-  if (!hasTitle && !hasDescription && !hasStatus) {
+  if (!hasTitle && !hasDescription && !hasPriority && !hasStatus) {
     throw new BugValidationError(
-      "At least one of title, description, or status is required.",
+      "At least one of title, description, priority, or status is required.",
     );
   }
 
@@ -91,6 +103,10 @@ function validateUpdateInput(input: unknown): UpdateBugInput {
 
   if (hasDescription) {
     validatedUpdate.description = validateDescription(update.description);
+  }
+
+  if (hasPriority) {
+    validatedUpdate.priority = validatePriority(update.priority);
   }
 
   if (hasStatus) {
@@ -115,9 +131,16 @@ async function createBug(
 
   const title = validateTitle(input.title);
   const description = validateDescription(input.description);
+  const priority = validatePriority(input.priority);
   const status = validateStatus(input.status);
 
-  return bugRepository.createBug(projectId, title, description, status);
+  return bugRepository.createBug(
+    projectId,
+    title,
+    description,
+    priority,
+    status,
+  );
 }
 
 async function listBugs(projectIdInput: unknown): Promise<Bug[]> {

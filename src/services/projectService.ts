@@ -39,6 +39,17 @@ function listProjects(): Promise<Project[]> {
   return projectRepository.listProjects();
 }
 
+async function getProject(projectIdInput: unknown): Promise<Project> {
+  const projectId = parseProjectId(projectIdInput);
+  const project = await projectRepository.getProject(projectId);
+
+  if (!project) {
+    throw new ProjectNotFoundError("Project not found.");
+  }
+
+  return project;
+}
+
 async function deleteProject(projectIdInput: unknown): Promise<void> {
   const projectId = parseProjectId(projectIdInput);
   const deleted = await projectRepository.deleteProject(projectId);
@@ -53,5 +64,6 @@ export = {
   ProjectNotFoundError,
   createProject,
   listProjects,
+  getProject,
   deleteProject,
 };

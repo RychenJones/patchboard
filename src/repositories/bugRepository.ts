@@ -1,6 +1,11 @@
 import sqlite3 = require("sqlite3");
 import databaseModule = require("../db/database");
-import type { Bug, BugStatus, UpdateBugInput } from "../models/bug";
+import type {
+  Bug,
+  BugPriority,
+  BugStatus,
+  UpdateBugInput,
+} from "../models/bug";
 
 const { database } = databaseModule;
 
@@ -25,13 +30,14 @@ function createBug(
   projectId: number,
   title: string,
   description: string | null,
+  priority: BugPriority,
   status: BugStatus,
 ): Promise<Bug> {
   return new Promise((resolve, reject) => {
     database.run(
-      `INSERT INTO bugs (project_id, title, description, status)
-       VALUES (?, ?, ?, ?)`,
-      [projectId, title, description, status],
+      `INSERT INTO bugs (project_id, title, description, priority, status)
+       VALUES (?, ?, ?, ?, ?)`,
+      [projectId, title, description, priority, status],
       function (this: sqlite3.RunResult, error: Error | null) {
         if (error) {
           reject(error);
@@ -43,9 +49,10 @@ function createBug(
                   project_id AS projectId,
                   title,
                   description,
+                  priority,
                   status,
-                  created_at AS createdAt,
-                  updated_at AS updatedAt
+                  strftime('%Y-%m-%dT%H:%M:%fZ', created_at) AS createdAt,
+                  strftime('%Y-%m-%dT%H:%M:%fZ', updated_at) AS updatedAt
            FROM bugs
            WHERE id = ?`,
           [this.lastID],
@@ -75,9 +82,10 @@ function listBugs(projectId: number): Promise<Bug[]> {
               project_id AS projectId,
               title,
               description,
+              priority,
               status,
-              created_at AS createdAt,
-              updated_at AS updatedAt
+              strftime('%Y-%m-%dT%H:%M:%fZ', created_at) AS createdAt,
+              strftime('%Y-%m-%dT%H:%M:%fZ', updated_at) AS updatedAt
        FROM bugs
        WHERE project_id = ?
        ORDER BY id ASC`,
@@ -101,9 +109,10 @@ function getBug(bugId: number): Promise<Bug | null> {
               project_id AS projectId,
               title,
               description,
+              priority,
               status,
-              created_at AS createdAt,
-              updated_at AS updatedAt
+              strftime('%Y-%m-%dT%H:%M:%fZ', created_at) AS createdAt,
+              strftime('%Y-%m-%dT%H:%M:%fZ', updated_at) AS updatedAt
        FROM bugs
        WHERE id = ?`,
       [bugId],
@@ -134,6 +143,11 @@ async function updateBug(
   if (updates.description !== undefined) {
     fields.push("description = ?");
     parameters.push(updates.description);
+  }
+
+  if (updates.priority !== undefined) {
+    fields.push("priority = ?");
+    parameters.push(updates.priority);
   }
 
   if (updates.status !== undefined) {
