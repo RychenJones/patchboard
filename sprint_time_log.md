@@ -32,13 +32,13 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/21/26 | 6:45     | IM     | Learned more about TypeScript.             | 30          |
 | 10/21/26 | 11:50    | IM     | Setup repo and installed TS and express.js.| 30          |
 | 10/22/26 | 2:30     | IM     | Learned about express.js and routing.      | 60          |
-| 10/23/26 | 10:15    | TP     | Set program to get photos from PocketBase. | 60          |
+| 10/23/26 | 10:15    | MTG    | Stand up, get photo from pocketbase.       | 60          |
 | 10/23/26 | 5:50     | IM     | Made big progress to agents.md.            | 30          |
 | 10/24/26 | 12:05    | IM     | Created db schema and routes to add and get| 30          |
 | 10/26/26 | 10:15    | TP     | Worked as a team on the project.           | 60          |
 | 10/27/26 | 12:30    | IM     | Finish API, start frontend, file structure.| 60          |
 | 10/27/26 | 1:30     | IM     | Finish frontend, touch up, understand code.| 60          |
-|          |          |        |                                            |             |
+| 10/27/26 | 3:10     | TP     | Touched up details, added filtering optons.| 60          |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
@@ -58,5 +58,5 @@ _Note: Add more rows as needed._
 |-------------------------------|:------------------------:|
 |IM - Individual Module         | 6:00/10                  |
 |TP - Team Project              | 3:00/4                   |
-|MTG - Class Meetings           | 1:00/4                   |
-|**TOTAL**                      | 10:00/18                  |
+|MTG - Class Meetings           | 2:00/4                   |
+|**TOTAL**                      | 11:00/18                  |
