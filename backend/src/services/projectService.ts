@@ -1,12 +1,19 @@
+import AppError = require("../errors/appError");
 import projectRepository = require("../repositories/projectRepository");
 import type { CreateProjectInput, Project } from "../models/project";
 
-class ProjectValidationError extends Error {
-  readonly statusCode = 400;
+class ProjectValidationError extends AppError {
+  constructor(message: string) {
+    super(message, 400);
+    this.name = "ProjectValidationError";
+  }
 }
 
-class ProjectNotFoundError extends Error {
-  readonly statusCode = 404;
+class ProjectNotFoundError extends AppError {
+  constructor(message: string) {
+    super(message, 404);
+    this.name = "ProjectNotFoundError";
+  }
 }
 
 function parseProjectId(projectId: unknown): number {

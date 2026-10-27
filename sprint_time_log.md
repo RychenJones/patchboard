@@ -37,7 +37,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/24/26 | 12:05    | IM     | Created db schema and routes to add and get| 30          |
 | 10/26/26 | 10:15    | TP     | Worked as a team on the project.           | 60          |
 | 10/27/26 | 12:30    | IM     | Finish API, start frontend, file structure.| 60          |
-|          |          |        |                                            |             |
+| 10/27/26 | 1:30 -10   | IM     |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |

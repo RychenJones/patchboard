@@ -1,6 +1,6 @@
 import type { BugPriority, BugStatus } from "../models/bug";
 
-export type BugStatusOption = readonly [
+type BugStatusOption = readonly [
   value: BugStatus,
   label: string,
 ];

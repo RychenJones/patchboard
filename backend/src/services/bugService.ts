@@ -1,3 +1,4 @@
+import AppError = require("../errors/appError");
 import statusModule = require("../constants/bugStatuses");
 import bugRepository = require("../repositories/bugRepository");
 import type {
@@ -10,16 +11,25 @@ import type {
 
 const { isBugPriority, isBugStatus } = statusModule;
 
-class BugValidationError extends Error {
-  readonly statusCode = 400;
+class BugValidationError extends AppError {
+  constructor(message: string) {
+    super(message, 400);
+    this.name = "BugValidationError";
+  }
 }
 
-class ProjectNotFoundError extends Error {
-  readonly statusCode = 404;
+class ProjectNotFoundError extends AppError {
+  constructor(message: string) {
+    super(message, 404);
+    this.name = "ProjectNotFoundError";
+  }
 }
 
-class BugNotFoundError extends Error {
-  readonly statusCode = 404;
+class BugNotFoundError extends AppError {
+  constructor(message: string) {
+    super(message, 404);
+    this.name = "BugNotFoundError";
+  }
 }
 
 function parseId(value: unknown, label: string): number {
