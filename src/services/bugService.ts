@@ -143,6 +143,15 @@ async function updateBug(
   return bug;
 }
 
+async function deleteBug(bugIdInput: unknown): Promise<void> {
+  const bugId = parseId(bugIdInput, "Bug ID");
+  const deleted = await bugRepository.deleteBug(bugId);
+
+  if (!deleted) {
+    throw new BugNotFoundError("Bug not found.");
+  }
+}
+
 export = {
   BugValidationError,
   ProjectNotFoundError,
@@ -150,4 +159,5 @@ export = {
   createBug,
   listBugs,
   updateBug,
+  deleteBug,
 };

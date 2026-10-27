@@ -7,7 +7,7 @@
 - [x] New bugs default to `incomplete`.
 - [x] A user can change a bug to `in-progress` or `completed`.
 - [x] A user can view all bugs for a project.
-- [ ] A user can edit or delete a bug.
+- [x] A user can edit or delete a bug.
 - [ ] A user can delete a project and its associated bugs.
 - [x] Data remains available after restarting the API.
 - [x] Invalid requests receive useful error responses.

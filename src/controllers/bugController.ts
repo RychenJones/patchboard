@@ -46,4 +46,17 @@ async function updateBug(
   }
 }
 
-export = { createBug, listBugs, updateBug };
+async function deleteBug(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    await bugService.deleteBug(request.params.bugId);
+    response.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export = { createBug, listBugs, updateBug, deleteBug };

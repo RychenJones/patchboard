@@ -165,4 +165,28 @@ async function updateBug(
   return getBug(bugId);
 }
 
-export = { projectExists, createBug, listBugs, getBug, updateBug };
+function deleteBug(bugId: number): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    database.run(
+      "DELETE FROM bugs WHERE id = ?",
+      [bugId],
+      function (this: sqlite3.RunResult, error: Error | null) {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(this.changes > 0);
+      },
+    );
+  });
+}
+
+export = {
+  projectExists,
+  createBug,
+  listBugs,
+  getBug,
+  updateBug,
+  deleteBug,
+};
