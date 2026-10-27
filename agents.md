@@ -4,7 +4,9 @@ This project uses the following agents:
 
 - [Architect](agents/architect.md)
 - [Orchestrator / Coordinator](agents/orchestrator.md)
+- [UI/UX Designer](agents/ui-ux-designer.md)
 - [Frontend Developer](agents/frontend-developer.md)
+- [Frontend Integration Specialist](agents/frontend-integration-specialist.md)
 - [Backend TypeScript Developer](agents/backend-typescript-developer.md)
 - [SQLite Database Administrator](agents/sqlite-database-administrator.md)
 - [QA Engineer](agents/qa-engineer.md)
@@ -26,14 +28,23 @@ clearly.
    multi-agent, or architecture-affecting work. For small work, the user may
    direct the Orchestrator without an Architect handoff.
 4. The Orchestrator converts the approved design or request into focused tasks
-   with clear acceptance criteria and assigns the appropriate agents.
-5. Developers complete their work and hand it to the [QA Engineer](agents/qa-engineer.md).
-   This includes frontend, backend, and database work.
-6. QA returns `PASS`, `PASS WITH NOTES`, or `FAIL`. A `FAIL` requires the
+   with clear acceptance criteria and assigns the appropriate agents. Frontend
+   work should include the UI/UX Designer before implementation when new
+   screens or user flows are needed.
+5. The UI/UX Designer defines the relevant screens, interactions, responsive
+   behavior, accessibility expectations, and UI states, then hands the design
+   to the Frontend Developer and Frontend Integration Specialist.
+6. Developers complete their assigned work. The Frontend Integration Specialist
+   connects the frontend to the backend contract and verifies request,
+   response, loading, validation-error, and server-error behavior.
+7. Frontend, backend, database, and integration work is handed to the
+   [QA Engineer](agents/qa-engineer.md) with the relevant completion report.
+8. QA returns `PASS`, `PASS WITH NOTES`, or `FAIL`. A `FAIL` requires the
    responsible agent to fix the issue and hand the work to QA again.
-7. For work involving both frontend and backend, the Orchestrator schedules a
-   final integration-QA pass after the individual checks pass.
-8. The Orchestrator returns the required user-facing summary after every task.
+9. For work involving both frontend and backend, the Orchestrator schedules a
+   final integration-QA pass after the individual checks pass. The Frontend
+   Integration Specialist participates in this pass.
+10. The Orchestrator returns the required user-facing summary after every task.
 
 ## Approval Boundary
 
@@ -54,6 +65,13 @@ When applicable, integration QA must verify:
 - The application can read and write expected records.
 - A representative end-to-end user flow completes successfully.
 
+For frontend work, integration QA must also verify:
+
+- The UI follows the approved UI/UX flow and handles responsive layouts.
+- Keyboard navigation, labels, focus states, and readable error messages work.
+- Empty, loading, success, validation-error, and server-error states are
+  visible and understandable.
+
 ## User-Facing Task Summary
 
 Keep the final summary brief and use this format:
@@ -63,7 +81,9 @@ Task status: COMPLETE | COMPLETE WITH NOTES | NEEDS CHANGES | BLOCKED
 
 Orchestrator: <how the task was broken down and coordinated>
 Architect: <design discussion and decisions, or "Not assigned">
+UI/UX Designer: <design work completed, or "Not assigned">
 Frontend Developer: <work completed, or "Not assigned">
+Frontend Integration Specialist: <integration work completed, or "Not assigned">
 Backend TypeScript Developer: <work completed, or "Not assigned">
 SQLite Database Administrator: <work completed, or "Not assigned">
 QA Engineer: <checks performed and PASS, PASS WITH NOTES, or FAIL>

@@ -27,4 +27,17 @@ async function listProjects(
   }
 }
 
-export = { createProject, listProjects };
+async function deleteProject(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    await projectService.deleteProject(request.params.projectId);
+    response.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export = { createProject, listProjects, deleteProject };

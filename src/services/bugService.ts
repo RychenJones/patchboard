@@ -1,3 +1,4 @@
+import statusModule = require("../constants/bugStatuses");
 import bugRepository = require("../repositories/bugRepository");
 import type {
   Bug,
@@ -5,6 +6,8 @@ import type {
   CreateBugInput,
   UpdateBugInput,
 } from "../models/bug";
+
+const { isBugStatus } = statusModule;
 
 class BugValidationError extends Error {
   readonly statusCode = 400;
@@ -52,12 +55,7 @@ function validateDescription(description: unknown): string | null {
 }
 
 function validateStatus(status: unknown): BugStatus {
-  if (
-    status !== undefined &&
-    status !== "incomplete" &&
-    status !== "in-progress" &&
-    status !== "completed"
-  ) {
+  if (status !== undefined && !isBugStatus(status)) {
     throw new BugValidationError(
       "Bug status must be incomplete, in-progress, or completed.",
     );

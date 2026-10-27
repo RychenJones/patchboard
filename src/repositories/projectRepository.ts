@@ -57,4 +57,21 @@ function listProjects(): Promise<Project[]> {
   });
 }
 
-export = { createProject, listProjects };
+function deleteProject(projectId: number): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    database.run(
+      "DELETE FROM projects WHERE id = ?",
+      [projectId],
+      function (this: sqlite3.RunResult, error: Error | null) {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(this.changes > 0);
+      },
+    );
+  });
+}
+
+export = { createProject, listProjects, deleteProject };

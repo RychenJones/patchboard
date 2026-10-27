@@ -5,6 +5,23 @@ class ProjectValidationError extends Error {
   readonly statusCode = 400;
 }
 
+class ProjectNotFoundError extends Error {
+  readonly statusCode = 404;
+}
+
+function parseProjectId(projectId: unknown): number {
+  if (typeof projectId !== "string" || !/^\d+$/.test(projectId)) {
+    throw new ProjectValidationError("Project ID must be a positive integer.");
+  }
+
+  const parsedProjectId = Number(projectId);
+  if (!Number.isSafeInteger(parsedProjectId) || parsedProjectId <= 0) {
+    throw new ProjectValidationError("Project ID must be a positive integer.");
+  }
+
+  return parsedProjectId;
+}
+
 function validateProjectName(name: unknown): string {
   if (typeof name !== "string" || name.trim().length === 0) {
     throw new ProjectValidationError("Project name is required.");
@@ -22,4 +39,19 @@ function listProjects(): Promise<Project[]> {
   return projectRepository.listProjects();
 }
 
-export = { ProjectValidationError, createProject, listProjects };
+async function deleteProject(projectIdInput: unknown): Promise<void> {
+  const projectId = parseProjectId(projectIdInput);
+  const deleted = await projectRepository.deleteProject(projectId);
+
+  if (!deleted) {
+    throw new ProjectNotFoundError("Project not found.");
+  }
+}
+
+export = {
+  ProjectValidationError,
+  ProjectNotFoundError,
+  createProject,
+  listProjects,
+  deleteProject,
+};
