@@ -1,17 +1,16 @@
-# MVP acceptance criteria
+# MVP Acceptance Checklist
 
-The MVP is complete when:
-1. A user can create a project by entering a name.
-2. A user can view all projects.
-3. A user can add a bug to a project.
-4. A bug has a title and status.
-5. New bugs default to incomplete.
-6. A user can change a bug to in-progress or completed.
-7. A user can view all bugs for a project.
-8. A user can edit or delete a bug.
-9. A user can delete a project and its associated bugs.
-10. Data remains available after restarting the API.
-11. Invalid requests receive useful error responses.
+- [x] A user can create a project by entering a name.
+- [x] A user can view all projects.
+- [x] A user can add a bug to a project.
+- [x] A bug has a title and status.
+- [x] New bugs default to `incomplete`.
+- [x] A user can change a bug to `in-progress` or `completed`.
+- [x] A user can view all bugs for a project.
+- [ ] A user can edit or delete a bug.
+- [ ] A user can delete a project and its associated bugs.
+- [x] Data remains available after restarting the API.
+- [x] Invalid requests receive useful error responses.
 
 
 

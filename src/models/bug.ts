@@ -16,3 +16,9 @@ export interface CreateBugInput {
   description?: string;
   status?: BugStatus;
 }
+
+export interface UpdateBugInput {
+  title?: string;
+  description?: string | null;
+  status?: BugStatus;
+}
