@@ -64,6 +64,12 @@ Every agent must:
 10. The Orchestrator returns the required user-facing completion summary only
     after the required QA checks pass.
 
+Direct user authorization to implement does not bypass this workflow. The
+Orchestrator must still coordinate the assigned roles and route completed work
+through QA. If the required Orchestrator, specialist, or QA role cannot be
+performed, the agent must report the task as `BLOCKED` or awaiting QA rather
+than silently skipping the role or claiming completion.
+
 ## Task statuses
 
 - `BACKLOG`: captured work not yet prepared for execution.
@@ -129,6 +135,10 @@ For frontend work, integration QA must also verify responsive layouts, the
 approved UI/UX flow, keyboard navigation, labels, focus states, readable error
 messages, and visible loading, empty, success, validation-error, and
 server-error states.
+
+Builds, type checks, lint checks, and diff checks do not replace required
+manual UI, integration, or end-to-end QA. Completion may be reported only
+after the applicable behavioral checks have been performed and documented.
 
 ## User-facing completion summary
 

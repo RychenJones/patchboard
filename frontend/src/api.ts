@@ -88,3 +88,9 @@ export function updateBug(
     body: JSON.stringify(updates),
   });
 }
+
+export function deleteBug(bugId: number): Promise<void> {
+  return request<void>(`/api/bugs/${bugId}`, {
+    method: "DELETE",
+  });
+}

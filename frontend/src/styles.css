@@ -441,6 +441,44 @@ tbody tr:last-child td {
   min-height: 32px;
 }
 
+.bug-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.delete-button {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  min-height: 32px;
+  border: 1px solid #e0a7aa;
+  border-radius: 6px;
+  padding: 0;
+  color: #a9232b;
+  background: #fff6f6;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.delete-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.delete-button:hover {
+  border-color: #a9232b;
+  background: #fbe3e4;
+}
+
+.delete-button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .bug-title-button {
   max-width: 360px;
   border: 0;
@@ -635,7 +673,10 @@ html[data-theme="dark"] .quick-add input,
 html[data-theme="dark"] .quick-add textarea,
 html[data-theme="dark"] .quick-add select,
 html[data-theme="dark"] .status-select,
-html[data-theme="dark"] .filter-field select {
+html[data-theme="dark"] .filter-field select,
+html[data-theme="dark"] .bug-edit-form input,
+html[data-theme="dark"] .bug-edit-form select,
+html[data-theme="dark"] .bug-edit-form textarea {
   color: #edf2f7;
 }
 
@@ -667,6 +708,7 @@ html[data-theme="dark"] th {
 }
 
 html[data-theme="dark"] .quick-add input,
+html[data-theme="dark"] .quick-add textarea,
 html[data-theme="dark"] .quick-add select,
 html[data-theme="dark"] .search-field input,
 html[data-theme="dark"] .status-select,
@@ -724,6 +766,17 @@ html[data-theme="dark"] .secondary-button {
   border-color: #536078;
   color: #b9c8ff;
   background: #1b222e;
+}
+
+html[data-theme="dark"] .delete-button {
+  border-color: #8f555b;
+  color: #ff9a9f;
+  background: #321f25;
+}
+
+html[data-theme="dark"] .delete-button:hover {
+  border-color: #ff9a9f;
+  background: #47262d;
 }
 
 html[data-theme="dark"] .page-state.error {

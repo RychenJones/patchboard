@@ -1,5 +1,6 @@
 import {
   createBug,
+  deleteBug,
   getBugs,
   getProject,
   updateBug,
@@ -163,6 +164,7 @@ function createBugRow(
   bug: Bug,
   onUpdated: () => Promise<void>,
   onEdit: () => void,
+  onDeleted: () => Promise<void>,
 ): HTMLTableRowElement {
   const row = element("tr");
   const titleCell = element("td");
@@ -179,13 +181,37 @@ function createBugRow(
     withChildren(element("td"), createStatusSelect(bug, onUpdated)),
   );
   row.append(setText(element("td", "date-cell"), formatDate(bug.createdAt)));
-  const actionCell = element("td");
+  const actionCell = element("td", "bug-actions");
   const editButton = element("button", "secondary-button table-action");
   editButton.type = "button";
   editButton.textContent = "Edit";
   editButton.setAttribute("aria-label", `Edit ${bug.title}`);
   editButton.addEventListener("click", onEdit);
-  actionCell.append(editButton);
+  const deleteButton = element("button", "delete-button");
+  deleteButton.type = "button";
+  deleteButton.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 21h8a2 2 0 0 0 2-2V7H6v12a2 2 0 0 0 2 2Zm7-11h1v9a1 1 0 0 1-1 1v-10ZM8 10h1v10H8V10Zm4 0h1v10h-1V10ZM15.5 4l-1-1h-5l-1 1H5v2h14V4h-3.5Z"/></svg>';
+  deleteButton.title = "Delete bug";
+  deleteButton.setAttribute("aria-label", `Delete ${bug.title}`);
+  deleteButton.addEventListener("click", async () => {
+    if (!window.confirm(`Delete “${bug.title}”? This cannot be undone.`)) {
+      return;
+    }
+
+    editButton.disabled = true;
+    deleteButton.disabled = true;
+    try {
+      await deleteBug(bug.id);
+      await onDeleted();
+    } catch (error) {
+      window.alert(
+        error instanceof Error ? error.message : "Unable to delete bug.",
+      );
+      editButton.disabled = false;
+      deleteButton.disabled = false;
+    }
+  });
+  actionCell.append(editButton, deleteButton);
   row.append(actionCell);
   return row;
 }
@@ -530,7 +556,7 @@ export async function renderProject(
             });
             row.replaceWith(editRow);
           };
-          const row = createBugRow(bug, refresh, enterEditMode);
+          const row = createBugRow(bug, refresh, enterEditMode, refresh);
           body.append(row);
         }
       };
