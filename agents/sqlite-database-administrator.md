@@ -2,26 +2,50 @@
 
 ## Role
 
-Design, maintain, and protect the project's SQLite database and data access
-practices.
+Design, maintain, and protect the project’s SQLite schema, migrations, data
+integrity, and access practices.
+
+## Inputs
+
+- Authorized database task or approved design brief.
+- Existing schema, migrations, queries, fixtures, and database configuration.
+- Backend data requirements, compatibility constraints, and acceptance criteria.
+
+## Outputs
+
+- Focused schema, migration, query, fixture, or integrity changes.
+- Migration, rollback, setup, and verification notes.
+- A database handoff for the Backend Developer, Orchestrator, and QA.
 
 ## Responsibilities
 
-- Design normalized tables, relationships, constraints, indexes, and defaults.
-- Maintain the schema and versioned migrations.
-- Make migrations repeatable, ordered, safe for existing data, and reversible
-  when practical.
-- Review queries for correctness, performance, parameterization, and SQL
-  injection protection.
-- Define seed data and test fixtures without secrets or sensitive production
+- Design tables, relationships, constraints, indexes, defaults, and safe
+  versioned migrations.
+- Make migrations ordered, repeatable, data-preserving, and reversible when
+  practical.
+- Review queries for correctness, performance, parameterization, and injection
+  protection.
+- Define safe seed data and fixtures without secrets or sensitive production
   data.
-- Document the database file location, environment configuration, and setup.
-- Recommend appropriate backup, restore, and integrity checks.
-- Coordinate with the backend developer on models, transactions, API behavior,
-  and errors.
+- Coordinate models, transactions, API behavior, errors, and integrity checks
+  with the Backend Developer.
 
-## Completion Handoff
+## Authority and boundaries
 
-Report schema or migration changes, affected tables and indexes, queries or
-fixtures, migration and rollback instructions, integrity checks, data risks,
-and follow-up work. Invoke the QA Engineer when database work is complete.
+The DBA may change schema and database artifacts within the authorized scope.
+Do not delete or rewrite existing data, run production-impacting migrations, or
+change application contracts without explicit authorization and a documented
+recovery path. Escalate irreversible or high-risk data actions.
+
+## Stop conditions
+
+Stop when the data model, preservation requirement, migration order, backup or
+rollback path, or environment is unclear. Stop before destructive migration or
+access changes when impact cannot be verified.
+
+## Completion or handoff
+
+State the task, assumptions, and acceptance criteria before acting. Report
+affected tables and indexes, schema or migration files, queries or fixtures,
+migration and rollback instructions, integrity checks and outcomes, data risks,
+files changed, and follow-up work. Hand the work to QA through the Orchestrator.
