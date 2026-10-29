@@ -1,6 +1,6 @@
 import sqlite3 = require("sqlite3");
 import databaseModule = require("../db/database");
-import type { Project } from "../models/project";
+import type { Project, UpdateProjectInput } from "../models/project";
 
 const { database } = databaseModule;
 
@@ -79,6 +79,41 @@ function getProject(projectId: number): Promise<Project | null> {
   });
 }
 
+async function updateProject(
+  projectId: number,
+  updates: UpdateProjectInput,
+): Promise<Project | null> {
+  const fields: string[] = [];
+  const parameters: unknown[] = [];
+
+  if (updates.name !== undefined) {
+    fields.push("name = ?");
+    parameters.push(updates.name);
+  }
+
+  if (fields.length === 0) {
+    return getProject(projectId);
+  }
+
+  parameters.push(projectId);
+  await new Promise<void>((resolve, reject) => {
+    database.run(
+      `UPDATE projects SET ${fields.join(", ")} WHERE id = ?`,
+      parameters,
+      (error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve();
+      },
+    );
+  });
+
+  return getProject(projectId);
+}
+
 function deleteProject(projectId: number): Promise<boolean> {
   return new Promise((resolve, reject) => {
     database.run(
@@ -96,4 +131,10 @@ function deleteProject(projectId: number): Promise<boolean> {
   });
 }
 
-export = { createProject, listProjects, getProject, deleteProject };
+export = {
+  createProject,
+  listProjects,
+  getProject,
+  updateProject,
+  deleteProject,
+};

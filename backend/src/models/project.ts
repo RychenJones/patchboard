@@ -8,6 +8,10 @@ export interface CreateProjectInput {
   name: string;
 }
 
+export interface UpdateProjectInput {
+  name?: string;
+}
+
 export interface PriorityCounts {
   low: number;
   medium: number;

@@ -1,6 +1,10 @@
 import AppError = require("../errors/appError");
 import projectRepository = require("../repositories/projectRepository");
-import type { CreateProjectInput, Project } from "../models/project";
+import type {
+  CreateProjectInput,
+  Project,
+  UpdateProjectInput,
+} from "../models/project";
 
 class ProjectValidationError extends AppError {
   constructor(message: string) {
@@ -42,8 +46,38 @@ function createProject(input: Partial<CreateProjectInput>): Promise<Project> {
   return projectRepository.createProject(name);
 }
 
+function validateUpdateInput(input: unknown): UpdateProjectInput {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) {
+    throw new ProjectValidationError("Project update must be a JSON object.");
+  }
+
+  const update = input as Record<string, unknown>;
+  if (!Object.prototype.hasOwnProperty.call(update, "name")) {
+    throw new ProjectValidationError(
+      "Project name is required for an update.",
+    );
+  }
+
+  return { name: validateProjectName(update.name) };
+}
+
 function listProjects(): Promise<Project[]> {
   return projectRepository.listProjects();
+}
+
+async function updateProject(
+  projectIdInput: unknown,
+  input: unknown,
+): Promise<Project> {
+  const projectId = parseProjectId(projectIdInput);
+  const updates = validateUpdateInput(input);
+  const project = await projectRepository.updateProject(projectId, updates);
+
+  if (!project) {
+    throw new ProjectNotFoundError("Project not found.");
+  }
+
+  return project;
 }
 
 async function getProject(projectIdInput: unknown): Promise<Project> {
@@ -71,6 +105,7 @@ export = {
   ProjectNotFoundError,
   createProject,
   listProjects,
+  updateProject,
   getProject,
   deleteProject,
 };

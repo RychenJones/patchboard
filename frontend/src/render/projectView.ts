@@ -3,6 +3,7 @@ import {
   getBugs,
   getProject,
   updateBug,
+  updateProject,
 } from "../api";
 import type { Bug, BugPriority, BugStatus } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
@@ -20,6 +21,74 @@ function createHeader(title: string, subtitle: string): HTMLElement {
   actions.append(createThemeToggle());
   header.append(copy, actions);
   return header;
+}
+
+function createProjectEditDialog(
+  projectId: number,
+  currentName: string,
+  onSaved: () => Promise<void>,
+): HTMLDialogElement {
+  const dialog = element("dialog", "project-edit-dialog");
+  const titleId = `project-edit-title-${projectId}`;
+  dialog.setAttribute("aria-labelledby", titleId);
+  const heading = setText(element("h2"), "Edit project");
+  heading.id = titleId;
+
+  const form = element("form", "project-edit-form");
+  const label = element("label", "edit-field");
+  label.append(setText(element("span"), "Project name"));
+  const input = element("input");
+  input.type = "text";
+  input.value = currentName;
+  input.required = true;
+  input.maxLength = 120;
+  label.append(input);
+
+  const errorMessage = element("p", "form-error");
+  errorMessage.setAttribute("role", "alert");
+  errorMessage.hidden = true;
+  const actions = element("div", "edit-actions");
+  const cancelButton = element("button", "secondary-button");
+  cancelButton.type = "button";
+  cancelButton.textContent = "Cancel";
+  cancelButton.addEventListener("click", () => dialog.close());
+  const saveButton = element("button", "primary-button");
+  saveButton.type = "submit";
+  saveButton.textContent = "Save changes";
+  actions.append(cancelButton, saveButton);
+
+  form.append(label, errorMessage, actions);
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = input.value.trim();
+    if (!name) {
+      errorMessage.textContent = "Project name is required.";
+      errorMessage.hidden = false;
+      input.focus();
+      return;
+    }
+
+    saveButton.disabled = true;
+    cancelButton.disabled = true;
+    errorMessage.hidden = true;
+    try {
+      await updateProject(projectId, name);
+      dialog.close();
+      await onSaved();
+    } catch (error) {
+      errorMessage.textContent =
+        error instanceof Error ? error.message : "Unable to update project.";
+      errorMessage.hidden = false;
+      saveButton.disabled = false;
+      cancelButton.disabled = false;
+    }
+  });
+
+  dialog.append(heading, form);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  return dialog;
 }
 
 function createPriorityBadge(priority: BugPriority): HTMLElement {
@@ -255,6 +324,21 @@ export async function renderProject(
     main.append(
       createHeader(project.name, `${openBugs} open · ${fixedBugs} fixed`),
     );
+    const pageHeader = main.querySelector<HTMLElement>(".page-header");
+    const editProjectButton = element("button", "secondary-button");
+    editProjectButton.type = "button";
+    editProjectButton.textContent = "Edit project";
+    const editProjectDialog = createProjectEditDialog(
+      project.id,
+      project.name,
+      async () => renderProject(root, projectId),
+    );
+    editProjectButton.addEventListener("click", () => {
+      editProjectDialog.showModal();
+      editProjectDialog.querySelector<HTMLInputElement>("input")?.focus();
+    });
+    pageHeader?.querySelector(".header-actions")?.append(editProjectButton);
+    main.append(editProjectDialog);
 
     const form = element("form", "quick-add");
     const titleInput = element("input");

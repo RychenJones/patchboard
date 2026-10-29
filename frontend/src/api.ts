@@ -55,6 +55,13 @@ export function createProject(name: string): Promise<Project> {
   });
 }
 
+export function updateProject(projectId: number, name: string): Promise<Project> {
+  return request<Project>(`/api/projects/${projectId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ name }),
+  });
+}
+
 export function createBug(
   projectId: number,
   title: string,

@@ -40,6 +40,22 @@ async function getProject(
   }
 }
 
+async function updateProject(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const project = await projectService.updateProject(
+      request.params.projectId,
+      request.body,
+    );
+    response.status(200).json(project);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function deleteProject(
   request: Request,
   response: Response,
@@ -53,4 +69,10 @@ async function deleteProject(
   }
 }
 
-export = { createProject, listProjects, getProject, deleteProject };
+export = {
+  createProject,
+  listProjects,
+  getProject,
+  updateProject,
+  deleteProject,
+};
