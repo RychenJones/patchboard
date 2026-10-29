@@ -51,6 +51,89 @@ select:focus-visible {
   margin-bottom: 28px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  width: 62px;
+  height: 34px;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: transparent;
+}
+
+.theme-toggle-track {
+  position: relative;
+  display: block;
+  width: 62px;
+  height: 34px;
+  border-radius: 999px;
+  background: #b8b8b8;
+  transition: background 150ms ease;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(23, 27, 36, 0.2);
+  transition: transform 150ms ease;
+}
+
+.theme-toggle-sun,
+.theme-toggle-moon {
+  position: absolute;
+  top: 50%;
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1;
+  transform: translateY(-52%);
+  transition: opacity 150ms ease;
+}
+
+.theme-toggle-sun {
+  right: 7px;
+  opacity: 1;
+}
+
+.theme-toggle-moon {
+  left: 8px;
+  opacity: 0;
+}
+
+.theme-toggle[data-state="dark"] .theme-toggle-track {
+  background: #303030;
+}
+
+.theme-toggle[data-state="dark"] .theme-toggle-thumb {
+  transform: translateX(28px);
+}
+
+.theme-toggle[data-state="dark"] .theme-toggle-sun {
+  opacity: 0;
+}
+
+.theme-toggle[data-state="dark"] .theme-toggle-moon {
+  opacity: 1;
+}
+
 h1,
 h2,
 p {
@@ -205,6 +288,7 @@ h1 {
 
 .quick-add input,
 .quick-add select,
+.search-field input,
 .status-select {
   min-height: 40px;
   border: 1px solid #b9c3d3;
@@ -212,6 +296,22 @@ h1 {
   padding: 0 12px;
   color: #171b24;
   background: white;
+}
+
+.search-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: #596273;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.search-field input {
+  width: 100%;
+  padding: 0 12px;
+  color: #171b24;
+  font-weight: 400;
 }
 
 .table-wrapper {
@@ -279,6 +379,12 @@ tbody tr:last-child td {
   white-space: nowrap;
 }
 
+.search-empty-row td {
+  padding: 28px 16px;
+  color: #596273;
+  text-align: center;
+}
+
 .page-state {
   display: grid;
   min-height: 100vh;
@@ -303,6 +409,72 @@ tbody tr:last-child td {
   text-align: center;
 }
 
+html[data-theme="dark"] body {
+  color: #edf2f7;
+  background: #151922;
+}
+
+html[data-theme="dark"] .page-subtitle,
+html[data-theme="dark"] .open-count,
+html[data-theme="dark"] .priority-summary,
+html[data-theme="dark"] .eyebrow,
+html[data-theme="dark"] .back-link,
+html[data-theme="dark"] .date-cell,
+html[data-theme="dark"] .search-field,
+html[data-theme="dark"] .page-state,
+html[data-theme="dark"] .empty-panel,
+html[data-theme="dark"] .search-empty-row td {
+  color: #aab4c4;
+}
+
+html[data-theme="dark"] .open-count strong,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .search-field input,
+html[data-theme="dark"] .quick-add input,
+html[data-theme="dark"] .quick-add select,
+html[data-theme="dark"] .status-select {
+  color: #edf2f7;
+}
+
+html[data-theme="dark"] .theme-toggle {
+  color: inherit;
+}
+
+html[data-theme="dark"] .project-card,
+html[data-theme="dark"] .table-wrapper,
+html[data-theme="dark"] .empty-panel {
+  border-color: #394354;
+  background: #202733;
+}
+
+html[data-theme="dark"] .project-card:hover {
+  border-color: #65769b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+
+html[data-theme="dark"] .next-up,
+html[data-theme="dark"] th,
+html[data-theme="dark"] td {
+  border-color: #394354;
+}
+
+html[data-theme="dark"] th {
+  color: #aab4c4;
+  background: #252e3c;
+}
+
+html[data-theme="dark"] .quick-add input,
+html[data-theme="dark"] .quick-add select,
+html[data-theme="dark"] .search-field input,
+html[data-theme="dark"] .status-select {
+  border-color: #536078;
+  background: #1b222e;
+}
+
+html[data-theme="dark"] .page-state.error {
+  color: #ff9a9f;
+}
+
 @media (max-width: 760px) {
   .page-shell {
     width: min(100% - 32px, 640px);
@@ -315,6 +487,10 @@ tbody tr:last-child td {
   }
 
   .page-header .primary-button {
+    align-self: flex-start;
+  }
+
+  .header-actions {
     align-self: flex-start;
   }
 

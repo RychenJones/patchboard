@@ -1,6 +1,7 @@
 import { createProject, getDashboard } from "../api";
 import type { DashboardProject } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
+import { createThemeToggle } from "../utils/theme";
 
 const priorityOrder = ["high", "medium", "low"] as const;
 
@@ -9,7 +10,9 @@ function createHeader(title: string, subtitle: string): HTMLElement {
   const copy = element("div");
   copy.append(setText(element("h1"), title));
   copy.append(setText(element("p", "page-subtitle"), subtitle));
-  header.append(copy);
+  const actions = element("div", "header-actions");
+  actions.append(createThemeToggle());
+  header.append(copy, actions);
   return header;
 }
 
@@ -89,7 +92,9 @@ export async function renderDashboard(root: HTMLDivElement): Promise<void> {
         );
       }
     });
-    header.append(newProjectButton);
+    header.querySelector<HTMLDivElement>(".header-actions")?.append(
+      newProjectButton,
+    );
     main.append(header);
 
     if (dashboard.projects.length === 0) {

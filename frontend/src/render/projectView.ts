@@ -7,6 +7,7 @@ import {
 import type { Bug, BugPriority, BugStatus } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
 import { formatDate, statusLabel } from "../utils/formatting";
+import { createThemeToggle } from "../utils/theme";
 
 const priorityOrder: BugPriority[] = ["high", "medium", "low"];
 
@@ -15,7 +16,9 @@ function createHeader(title: string, subtitle: string): HTMLElement {
   const copy = element("div");
   copy.append(setText(element("h1"), title));
   copy.append(setText(element("p", "page-subtitle"), subtitle));
-  header.append(copy);
+  const actions = element("div", "header-actions");
+  actions.append(createThemeToggle());
+  header.append(copy, actions);
   return header;
 }
 
@@ -136,6 +139,15 @@ export async function renderProject(
         ),
       );
     } else {
+      const searchLabel = element("label", "search-field");
+      searchLabel.append(setText(element("span"), "Search bugs by title"));
+      const searchInput = element("input");
+      searchInput.type = "search";
+      searchInput.placeholder = "Search bugs…";
+      searchInput.setAttribute("aria-label", "Search bugs by title");
+      searchLabel.append(searchInput);
+      main.append(searchLabel);
+
       const tableWrapper = element("div", "table-wrapper");
       const table = element("table");
       const head = element("thead");
@@ -146,9 +158,33 @@ export async function renderProject(
       head.append(headerRow);
       const body = element("tbody");
       const refresh = () => renderProject(root, projectId);
-      for (const bug of bugs) {
-        body.append(createBugRow(bug, refresh));
-      }
+
+      const renderRows = (): void => {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const matchingBugs = bugs.filter((bug) =>
+          bug.title.toLowerCase().includes(searchTerm),
+        );
+
+        body.replaceChildren();
+        if (matchingBugs.length === 0) {
+          const emptyRow = element("tr", "search-empty-row");
+          const emptyCell = setText(
+            element("td"),
+            "No bugs match your search.",
+          );
+          emptyCell.colSpan = 4;
+          emptyRow.append(emptyCell);
+          body.append(emptyRow);
+          return;
+        }
+
+        for (const bug of matchingBugs) {
+          body.append(createBugRow(bug, refresh));
+        }
+      };
+
+      searchInput.addEventListener("input", renderRows);
+      renderRows();
       table.append(head, body);
       tableWrapper.append(table);
       main.append(tableWrapper);

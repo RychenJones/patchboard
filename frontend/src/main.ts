@@ -1,6 +1,7 @@
 import { renderDashboard } from "./render/dashboard";
 import { renderProject } from "./render/projectView";
 import "./styles.css";
+import { applySavedTheme } from "./utils/theme";
 
 const appRootCandidate = document.querySelector<HTMLDivElement>("#app");
 
@@ -9,6 +10,7 @@ if (!appRootCandidate) {
 }
 
 const appRoot = appRootCandidate;
+applySavedTheme();
 
 function renderRoute(): void {
   const match = window.location.hash.match(/^#\/projects\/(\d+)$/);
