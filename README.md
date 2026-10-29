@@ -1,21 +1,3 @@
-# MVP Acceptance Checklist
-
-- [x] A user can create a project by entering a name.
-- [x] A user can view all projects.
-- [x] A user can add a bug to a project.
-- [x] A bug has a title and status.
-- [x] New bugs default to `incomplete`.
-- [x] A user can change a bug to `in-progress` or `completed`.
-- [x] A user can view all bugs for a project.
-- [x] A user can edit or delete a bug.
-- [x] A user can delete a project and its associated bugs.
-- [x] Data remains available after restarting the API.
-- [x] Invalid requests receive useful error responses.
-
-
-
-
-
 # PatchBoard
 
 PatchBoard is a basic applicaiton to keep track of software projects and their known bugs and problems waiting to be patched. Each issue has a status indicator indicating whether it is waiting for a patch, in progress, or patched.
@@ -48,17 +30,20 @@ development URL, usually `http://localhost:5173`.
 
 To recreate the development environment, you need the following software and/or libraries with the specified versions:
 
-* First thing here
-*
-*
+* Node.js 22 LTS or later
+* npm
+* TypeScript
+* Express
+* SQLite3
+* Vite
 
 ## Useful Websites to Learn More
 
 I found these websites useful in developing this software:
 
-* [Website Title](Link)
-*
-*
+* [YouTube](https://youtu.be/BRbgxKDzzzU?si=TCfaz-pIqAITydyt)
+* [YouTube](https://youtu.be/S-aprSnsGnQ?si=mkSHdjf4DS_x7J4n)
+* [YouTube](https://youtu.be/JUORwadOU7s?si=h2d4nNectIGav60R)
 
 ## Future Work
 

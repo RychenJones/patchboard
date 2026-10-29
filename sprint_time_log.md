@@ -39,8 +39,8 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/27/26 | 12:30    | IM     | Finish API, start frontend, file structure.| 60          |
 | 10/27/26 | 1:30     | IM     | Finish frontend, touch up, understand code.| 60          |
 | 10/27/26 | 3:10     | TP     | Touched up details, added filtering optons.| 60          |
-|          |          |        |                                            |             |
-|          |          |        |                                            |             |
+| 10/28/26 | 10:15    | MTG    | Team presentations.                        | 60          |
+| 10/28/26 | 8:50     | IM     |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
@@ -58,5 +58,5 @@ _Note: Add more rows as needed._
 |-------------------------------|:------------------------:|
 |IM - Individual Module         | 6:00/10                  |
 |TP - Team Project              | 3:00/4                   |
-|MTG - Class Meetings           | 2:00/4                   |
-|**TOTAL**                      | 11:00/18                  |
+|MTG - Class Meetings           | 3:00/4                   |
+|**TOTAL**                      | 12:00/18                 |
