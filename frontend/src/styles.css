@@ -377,6 +377,26 @@ h1 {
   background: #f5f7ff;
 }
 
+.danger-button {
+  border: 1px solid #d46b71;
+  border-radius: 7px;
+  padding: 10px 14px;
+  color: #a9232b;
+  background: #fff6f6;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.danger-button:hover {
+  border-color: #a9232b;
+  background: #fbe3e4;
+}
+
+.danger-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .table-wrapper {
   overflow-x: auto;
   border: 1px solid #d8dde5;
@@ -766,6 +786,17 @@ html[data-theme="dark"] .secondary-button {
   border-color: #536078;
   color: #b9c8ff;
   background: #1b222e;
+}
+
+html[data-theme="dark"] .danger-button {
+  border-color: #8f555b;
+  color: #ff9a9f;
+  background: #321f25;
+}
+
+html[data-theme="dark"] .danger-button:hover {
+  border-color: #ff9a9f;
+  background: #47262d;
 }
 
 html[data-theme="dark"] .delete-button {

@@ -62,6 +62,12 @@ export function updateProject(projectId: number, name: string): Promise<Project>
   });
 }
 
+export function deleteProject(projectId: number): Promise<void> {
+  return request<void>(`/api/projects/${projectId}`, {
+    method: "DELETE",
+  });
+}
+
 export function createBug(
   projectId: number,
   title: string,

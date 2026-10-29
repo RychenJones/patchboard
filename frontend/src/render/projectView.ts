@@ -1,6 +1,7 @@
 import {
   createBug,
   deleteBug,
+  deleteProject,
   getBugs,
   getProject,
   updateBug,
@@ -364,6 +365,31 @@ export async function renderProject(
       editProjectDialog.querySelector<HTMLInputElement>("input")?.focus();
     });
     pageHeader?.querySelector(".header-actions")?.append(editProjectButton);
+    const deleteProjectButton = element("button", "danger-button");
+    deleteProjectButton.type = "button";
+    deleteProjectButton.textContent = "Delete project";
+    deleteProjectButton.addEventListener("click", async () => {
+      const confirmed = window.confirm(
+        `Delete “${project.name}”? This will also permanently delete all bugs in this project.`,
+      );
+      if (!confirmed) return;
+
+      deleteProjectButton.disabled = true;
+      editProjectButton.disabled = true;
+      try {
+        await deleteProject(project.id);
+        window.location.hash = "#/";
+      } catch (error) {
+        window.alert(
+          error instanceof Error
+            ? error.message
+            : "Unable to delete project.",
+        );
+        deleteProjectButton.disabled = false;
+        editProjectButton.disabled = false;
+      }
+    });
+    pageHeader?.querySelector(".header-actions")?.append(deleteProjectButton);
     main.append(editProjectDialog);
 
     const form = element("form", "quick-add");
