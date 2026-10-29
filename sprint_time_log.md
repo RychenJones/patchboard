@@ -40,7 +40,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/27/26 | 1:30     | IM     | Finish frontend, touch up, understand code.| 60          |
 | 10/27/26 | 3:10     | TP     | Touched up details, added filtering optons.| 60          |
 | 10/28/26 | 10:15    | MTG    | Team presentations.                        | 60          |
-| 10/28/26 | 8:50     | IM     |                                            |             |
+| 10/28/26 | 8:50     | IM     | Added bug search, dark theme, agent work.  | 60          |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
@@ -56,7 +56,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         | 6:00/10                  |
+|IM - Individual Module         | 7:00/10                  |
 |TP - Team Project              | 3:00/4                   |
 |MTG - Class Meetings           | 3:00/4                   |
-|**TOTAL**                      | 12:00/18                 |
+|**TOTAL**                      | 13:00/18                 |
