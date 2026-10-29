@@ -148,6 +148,81 @@ export async function renderProject(
       searchLabel.append(searchInput);
       main.append(searchLabel);
 
+      const filters = element("fieldset", "bug-filters");
+      filters.append(setText(element("legend"), "Filter bugs"));
+
+      const statusFilterLabel = element("label", "filter-field");
+      statusFilterLabel.append(setText(element("span"), "Status"));
+      const statusFilter = element("select");
+      statusFilter.setAttribute("aria-label", "Filter bugs by status");
+      for (const [value, label] of [
+        ["all", "All statuses"],
+        ["incomplete", "Incomplete"],
+        ["in-progress", "In progress"],
+        ["completed", "Completed"],
+      ] as const) {
+        const option = element("option");
+        option.value = value;
+        option.textContent = label;
+        statusFilter.append(option);
+      }
+      statusFilterLabel.append(statusFilter);
+
+      const priorityFilterLabel = element("label", "filter-field");
+      priorityFilterLabel.append(setText(element("span"), "Priority"));
+      const priorityFilter = element("select");
+      priorityFilter.setAttribute("aria-label", "Filter bugs by priority");
+      for (const [value, label] of [
+        ["all", "All priorities"],
+        ["high", "High"],
+        ["medium", "Medium"],
+        ["low", "Low"],
+      ] as const) {
+        const option = element("option");
+        option.value = value;
+        option.textContent = label;
+        priorityFilter.append(option);
+      }
+      priorityFilterLabel.append(priorityFilter);
+
+      const completionFilterLabel = element("label", "filter-field");
+      completionFilterLabel.append(setText(element("span"), "Completion"));
+      const completionFilter = element("select");
+      completionFilter.setAttribute(
+        "aria-label",
+        "Filter bugs by completion",
+      );
+      for (const [value, label] of [
+        ["all", "Open and completed"],
+        ["open", "Open bugs"],
+        ["completed", "Completed bugs"],
+      ] as const) {
+        const option = element("option");
+        option.value = value;
+        option.textContent = label;
+        completionFilter.append(option);
+      }
+      completionFilterLabel.append(completionFilter);
+
+      const clearFiltersButton = element("button", "secondary-button");
+      clearFiltersButton.type = "button";
+      clearFiltersButton.textContent = "Clear filters";
+      clearFiltersButton.addEventListener("click", () => {
+        searchInput.value = "";
+        statusFilter.value = "all";
+        priorityFilter.value = "all";
+        completionFilter.value = "all";
+        renderRows();
+        searchInput.focus();
+      });
+      filters.append(
+        statusFilterLabel,
+        priorityFilterLabel,
+        completionFilterLabel,
+        clearFiltersButton,
+      );
+      main.append(filters);
+
       const tableWrapper = element("div", "table-wrapper");
       const table = element("table");
       const head = element("thead");
@@ -162,7 +237,14 @@ export async function renderProject(
       const renderRows = (): void => {
         const searchTerm = searchInput.value.trim().toLowerCase();
         const matchingBugs = bugs.filter((bug) =>
-          bug.title.toLowerCase().includes(searchTerm),
+          bug.title.toLowerCase().includes(searchTerm) &&
+          (statusFilter.value === "all" || bug.status === statusFilter.value) &&
+          (priorityFilter.value === "all" ||
+            bug.priority === priorityFilter.value) &&
+          (completionFilter.value === "all" ||
+            (completionFilter.value === "completed"
+              ? bug.status === "completed"
+              : bug.status !== "completed")),
         );
 
         body.replaceChildren();
@@ -170,7 +252,7 @@ export async function renderProject(
           const emptyRow = element("tr", "search-empty-row");
           const emptyCell = setText(
             element("td"),
-            "No bugs match your search.",
+            "No bugs match your search and filters.",
           );
           emptyCell.colSpan = 4;
           emptyRow.append(emptyCell);
@@ -184,6 +266,9 @@ export async function renderProject(
       };
 
       searchInput.addEventListener("input", renderRows);
+      statusFilter.addEventListener("change", renderRows);
+      priorityFilter.addEventListener("change", renderRows);
+      completionFilter.addEventListener("change", renderRows);
       renderRows();
       table.append(head, body);
       tableWrapper.append(table);

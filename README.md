@@ -49,8 +49,8 @@ I found these websites useful in developing this software:
 
 The following items I plan to fix, improve, and/or add to this project in the future:
 
-* [ ] Add bug search by title.
-* [ ] Add filters for bug status, priority, and open versus completed bugs.
+* [x] Add bug search by title.
+* [x] Add filters for bug status, priority, and open versus completed bugs.
 * [ ] Add frontend controls for editing bug titles, descriptions, priorities, and statuses.
 * [ ] Add frontend controls for deleting bugs.
 * [ ] Add project deletion with a confirmation warning that associated bugs will also be deleted.
