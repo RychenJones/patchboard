@@ -281,21 +281,32 @@ h1 {
 
 .quick-add {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 140px auto;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 1.5fr) 140px auto;
   gap: 8px;
   margin-bottom: 20px;
 }
 
 .quick-add input,
+.quick-add textarea,
 .quick-add select,
 .search-field input,
-.status-select {
+.status-select,
+.bug-edit-form input,
+.bug-edit-form select,
+.bug-edit-form textarea {
   min-height: 40px;
   border: 1px solid #b9c3d3;
   border-radius: 6px;
   padding: 0 12px;
   color: #171b24;
   background: white;
+}
+
+.quick-add textarea {
+  min-height: 40px;
+  resize: vertical;
+  padding: 10px 12px;
+  font: inherit;
 }
 
 .search-field {
@@ -425,6 +436,121 @@ tbody tr:last-child td {
   padding: 0 8px;
 }
 
+.table-action {
+  min-height: 32px;
+}
+
+.bug-title-button {
+  max-width: 360px;
+  border: 0;
+  padding: 0;
+  color: #3c5bd7;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+}
+
+.bug-title-button:hover,
+.bug-title-button:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.bug-details-dialog {
+  width: min(90vw, 440px);
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 1px solid #d8dde5;
+  border-radius: 10px;
+  padding: 24px;
+  color: #171b24;
+  background: white;
+  box-shadow: 0 18px 60px rgba(23, 27, 36, 0.25);
+}
+
+.bug-details-dialog::backdrop {
+  background: rgba(23, 27, 36, 0.45);
+}
+
+.bug-details-dialog h2 {
+  margin: 0 0 16px;
+}
+
+.bug-description {
+  margin: 0 0 20px;
+  color: #596273;
+  white-space: pre-wrap;
+}
+
+.bug-details-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 20px;
+  margin: 0 0 24px;
+}
+
+.bug-details-list dt {
+  color: #596273;
+  font-weight: 700;
+}
+
+.bug-details-list dd {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.bug-edit-row td {
+  padding: 16px;
+  background: #f8faff;
+}
+
+.bug-edit-form {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.5fr) minmax(180px, 2fr) 140px 140px auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.edit-field {
+  display: grid;
+  gap: 6px;
+  color: #596273;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.bug-edit-form input,
+.bug-edit-form select,
+.bug-edit-form textarea {
+  width: 100%;
+  border: 1px solid #b9c3d3;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #171b24;
+  background: white;
+  font: inherit;
+  font-weight: 400;
+}
+
+.bug-edit-form textarea {
+  resize: vertical;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #a9232b;
+  font-size: 0.85rem;
+}
+
 .date-cell {
   color: #596273;
   white-space: nowrap;
@@ -482,6 +608,7 @@ html[data-theme="dark"] .open-count strong,
 html[data-theme="dark"] .theme-toggle,
 html[data-theme="dark"] .search-field input,
 html[data-theme="dark"] .quick-add input,
+html[data-theme="dark"] .quick-add textarea,
 html[data-theme="dark"] .quick-add select,
 html[data-theme="dark"] .status-select,
 html[data-theme="dark"] .filter-field select {
@@ -519,13 +646,43 @@ html[data-theme="dark"] .quick-add input,
 html[data-theme="dark"] .quick-add select,
 html[data-theme="dark"] .search-field input,
 html[data-theme="dark"] .status-select,
-html[data-theme="dark"] .filter-field select {
+html[data-theme="dark"] .filter-field select,
+html[data-theme="dark"] .bug-edit-form input,
+html[data-theme="dark"] .bug-edit-form select,
+html[data-theme="dark"] .bug-edit-form textarea {
   border-color: #536078;
   background: #1b222e;
 }
 
 html[data-theme="dark"] .bug-filters {
   border-color: #394354;
+}
+
+html[data-theme="dark"] .bug-edit-row td {
+  background: #252e3c;
+}
+
+html[data-theme="dark"] .bug-title-button {
+  color: #b9c8ff;
+}
+
+html[data-theme="dark"] .bug-details-dialog {
+  border-color: #536078;
+  color: #edf2f7;
+  background: #202733;
+}
+
+html[data-theme="dark"] .bug-description,
+html[data-theme="dark"] .bug-details-list dt {
+  color: #aab4c4;
+}
+
+html[data-theme="dark"] .edit-field {
+  color: #aab4c4;
+}
+
+html[data-theme="dark"] .form-error {
+  color: #ff9a9f;
 }
 
 html[data-theme="dark"] .bug-filters legend,
@@ -568,6 +725,17 @@ html[data-theme="dark"] .page-state.error {
 
   .quick-add {
     grid-template-columns: 1fr;
+  }
+
+  .bug-edit-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bug-edit-form .edit-field:nth-child(1),
+  .bug-edit-form .edit-field:nth-child(2),
+  .bug-edit-form .edit-actions,
+  .bug-edit-form .form-error {
+    grid-column: 1 / -1;
   }
 
   .bug-filters {

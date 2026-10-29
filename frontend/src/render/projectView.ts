@@ -55,17 +55,180 @@ function createStatusSelect(
   return select;
 }
 
+function createBugDetailsDialog(bug: Bug): HTMLDialogElement {
+  const dialog = element("dialog", "bug-details-dialog");
+  const titleId = `bug-details-title-${bug.id}`;
+  dialog.setAttribute("aria-labelledby", titleId);
+
+  const heading = setText(element("h2"), bug.title);
+  heading.id = titleId;
+  const description = setText(
+    element("p", "bug-description"),
+    bug.description ?? "No description provided.",
+  );
+  const details = element("dl", "bug-details-list");
+  for (const { label, value } of [
+    { label: "Priority", value: bug.priority },
+    { label: "Status", value: statusLabel(bug.status) },
+    { label: "Created", value: formatDate(bug.createdAt) },
+    { label: "Updated", value: formatDate(bug.updatedAt) },
+  ]) {
+    details.append(
+      setText(element("dt"), label),
+      setText(element("dd"), value),
+    );
+  }
+
+  const closeButton = element("button", "secondary-button");
+  closeButton.type = "button";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", () => dialog.close());
+  dialog.append(heading, description, details, closeButton);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  return dialog;
+}
+
 function createBugRow(
   bug: Bug,
   onUpdated: () => Promise<void>,
+  onEdit: () => void,
 ): HTMLTableRowElement {
   const row = element("tr");
-  row.append(setText(element("td"), bug.title));
+  const titleCell = element("td");
+  const titleButton = element("button", "bug-title-button");
+  titleButton.type = "button";
+  titleButton.textContent = bug.title;
+  titleButton.setAttribute("aria-label", `View details for ${bug.title}`);
+  const detailsDialog = createBugDetailsDialog(bug);
+  titleButton.addEventListener("click", () => detailsDialog.showModal());
+  titleCell.append(titleButton, detailsDialog);
+  row.append(titleCell);
   row.append(withChildren(element("td"), createPriorityBadge(bug.priority)));
   row.append(
     withChildren(element("td"), createStatusSelect(bug, onUpdated)),
   );
   row.append(setText(element("td", "date-cell"), formatDate(bug.createdAt)));
+  const actionCell = element("td");
+  const editButton = element("button", "secondary-button table-action");
+  editButton.type = "button";
+  editButton.textContent = "Edit";
+  editButton.setAttribute("aria-label", `Edit ${bug.title}`);
+  editButton.addEventListener("click", onEdit);
+  actionCell.append(editButton);
+  row.append(actionCell);
+  return row;
+}
+
+function createBugEditRow(
+  bug: Bug,
+  onSaved: () => Promise<void>,
+  onCancel: () => void,
+): HTMLTableRowElement {
+  const row = element("tr", "bug-edit-row");
+  const cell = element("td");
+  cell.colSpan = 5;
+  const form = element("form", "bug-edit-form");
+
+  const titleLabel = element("label", "edit-field");
+  titleLabel.append(setText(element("span"), "Title"));
+  const titleInput = element("input");
+  titleInput.type = "text";
+  titleInput.value = bug.title;
+  titleInput.required = true;
+  titleInput.maxLength = 200;
+  titleLabel.append(titleInput);
+
+  const descriptionLabel = element("label", "edit-field");
+  descriptionLabel.append(setText(element("span"), "Description"));
+  const descriptionInput = element("textarea");
+  descriptionInput.value = bug.description ?? "";
+  descriptionInput.rows = 3;
+  descriptionLabel.append(descriptionInput);
+
+  const priorityLabel = element("label", "edit-field");
+  priorityLabel.append(setText(element("span"), "Priority"));
+  const prioritySelect = element("select");
+  for (const priority of priorityOrder) {
+    const option = element("option");
+    option.value = priority;
+    option.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+    option.selected = priority === bug.priority;
+    prioritySelect.append(option);
+  }
+  priorityLabel.append(prioritySelect);
+
+  const statusField = element("label", "edit-field");
+  statusField.append(setText(element("span"), "Status"));
+  const statusSelect = element("select");
+  for (const status of [
+    "incomplete",
+    "in-progress",
+    "completed",
+  ] as BugStatus[]) {
+    const option = element("option");
+    option.value = status;
+    option.textContent = statusLabel(status);
+    option.selected = status === bug.status;
+    statusSelect.append(option);
+  }
+  statusField.append(statusSelect);
+
+  const actions = element("div", "edit-actions");
+  const cancelButton = element("button", "secondary-button");
+  cancelButton.type = "button";
+  cancelButton.textContent = "Cancel";
+  cancelButton.addEventListener("click", onCancel);
+  const saveButton = element("button", "primary-button");
+  saveButton.type = "submit";
+  saveButton.textContent = "Save changes";
+  actions.append(cancelButton, saveButton);
+
+  const errorMessage = element("p", "form-error");
+  errorMessage.setAttribute("role", "alert");
+  errorMessage.hidden = true;
+  form.append(
+    titleLabel,
+    descriptionLabel,
+    priorityLabel,
+    statusField,
+    actions,
+    errorMessage,
+  );
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const title = titleInput.value.trim();
+    if (!title) {
+      errorMessage.textContent = "Bug title is required.";
+      errorMessage.hidden = false;
+      titleInput.focus();
+      return;
+    }
+
+    saveButton.disabled = true;
+    cancelButton.disabled = true;
+    errorMessage.hidden = true;
+    try {
+      await updateBug(bug.id, {
+        title,
+        description: descriptionInput.value.trim() || null,
+        priority: prioritySelect.value as BugPriority,
+        status: statusSelect.value as BugStatus,
+      });
+      await onSaved();
+    } catch (error) {
+      errorMessage.textContent =
+        error instanceof Error ? error.message : "Unable to update bug.";
+      errorMessage.hidden = false;
+      saveButton.disabled = false;
+      cancelButton.disabled = false;
+    }
+  });
+
+  cell.append(form);
+  row.append(cell);
+  titleInput.focus();
   return row;
 }
 
@@ -99,6 +262,10 @@ export async function renderProject(
     titleInput.placeholder = "Add a bug and press Enter…";
     titleInput.setAttribute("aria-label", "Bug title");
     titleInput.required = true;
+    const descriptionInput = element("textarea", "quick-add-description");
+    descriptionInput.placeholder = "Description (optional)";
+    descriptionInput.setAttribute("aria-label", "Bug description");
+    descriptionInput.rows = 1;
     const prioritySelect = element("select");
     prioritySelect.setAttribute("aria-label", "Bug priority");
     for (const priority of priorityOrder.slice().reverse()) {
@@ -111,7 +278,7 @@ export async function renderProject(
     const addButton = element("button", "primary-button");
     addButton.type = "submit";
     addButton.textContent = "Add";
-    form.append(titleInput, prioritySelect, addButton);
+    form.append(titleInput, descriptionInput, prioritySelect, addButton);
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       addButton.disabled = true;
@@ -120,6 +287,7 @@ export async function renderProject(
           projectId,
           titleInput.value.trim(),
           prioritySelect.value as BugPriority,
+          descriptionInput.value.trim() || null,
         );
         await renderProject(root, projectId);
       } catch (error) {
@@ -227,7 +395,13 @@ export async function renderProject(
       const table = element("table");
       const head = element("thead");
       const headerRow = element("tr");
-      for (const heading of ["Title", "Priority", "Status", "Logged"]) {
+      for (const heading of [
+        "Title",
+        "Priority",
+        "Status",
+        "Logged",
+        "Actions",
+      ]) {
         headerRow.append(setText(element("th"), heading));
       }
       head.append(headerRow);
@@ -261,7 +435,19 @@ export async function renderProject(
         }
 
         for (const bug of matchingBugs) {
-          body.append(createBugRow(bug, refresh));
+          let editing = false;
+          let editRow: HTMLTableRowElement | undefined;
+          const enterEditMode = (): void => {
+            if (editing) return;
+            editing = true;
+            editRow = createBugEditRow(bug, refresh, () => {
+              editRow?.replaceWith(row);
+              editing = false;
+            });
+            row.replaceWith(editRow);
+          };
+          const row = createBugRow(bug, refresh, enterEditMode);
+          body.append(row);
         }
       };
 

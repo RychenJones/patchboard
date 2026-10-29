@@ -59,16 +59,22 @@ export function createBug(
   projectId: number,
   title: string,
   priority: BugPriority,
+  description?: string | null,
 ): Promise<Bug> {
   return request<Bug>(`/api/projects/${projectId}/bugs`, {
     method: "POST",
-    body: JSON.stringify({ title, priority }),
+    body: JSON.stringify({ title, priority, description }),
   });
 }
 
 export function updateBug(
   bugId: number,
-  updates: { status?: BugStatus },
+  updates: {
+    title?: string;
+    description?: string | null;
+    priority?: BugPriority;
+    status?: BugStatus;
+  },
 ): Promise<Bug> {
   return request<Bug>(`/api/bugs/${bugId}`, {
     method: "PATCH",
