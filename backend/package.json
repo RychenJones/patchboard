@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,12 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.5",
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
+    "@swc/core": "^1.13.5",
+    "@swc/jest": "^0.2.39",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4",
     "typescript": "^7.0.2"
   }
 }
