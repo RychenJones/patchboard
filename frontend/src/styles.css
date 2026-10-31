@@ -44,6 +44,37 @@ textarea:focus-visible {
   padding: 42px 0 72px;
 }
 
+.brand-header {
+  margin-bottom: 34px;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #171b24;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+}
+
+.brand-link:hover {
+  color: #3c5bd7;
+}
+
+.brand-mark {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  color: #fff;
+  background: #3c5bd7;
+  font-size: 0.95rem;
+  letter-spacing: 0;
+}
+
 .page-header {
   display: flex;
   align-items: flex-start;
@@ -673,6 +704,14 @@ html[data-theme="dark"] body {
   background: #151922;
 }
 
+html[data-theme="dark"] .brand-link {
+  color: #edf2f7;
+}
+
+html[data-theme="dark"] .brand-link:hover {
+  color: #b9c8ff;
+}
+
 html[data-theme="dark"] .page-subtitle,
 html[data-theme="dark"] .open-count,
 html[data-theme="dark"] .priority-summary,
@@ -818,6 +857,10 @@ html[data-theme="dark"] .page-state.error {
   .page-shell {
     width: min(100% - 32px, 640px);
     padding-top: 28px;
+  }
+
+  .brand-header {
+    margin-bottom: 28px;
   }
 
   .page-header {

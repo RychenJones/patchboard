@@ -1,6 +1,7 @@
 import { createProject, getDashboard } from "../api";
 import type { DashboardProject } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
+import { createBrandHeader } from "../utils/brand";
 import { createThemeToggle } from "../utils/theme";
 
 const priorityOrder = ["high", "medium", "low"] as const;
@@ -73,6 +74,7 @@ export async function renderDashboard(root: HTMLDivElement): Promise<void> {
   try {
     const dashboard = await getDashboard();
     const main = element("main", "page-shell");
+    main.append(createBrandHeader());
     const header = createHeader(
       "Your projects",
       `${dashboard.totalOpenBugs} open bugs across ${dashboard.totalProjects} projects`,

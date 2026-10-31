@@ -9,6 +9,7 @@ import {
 } from "../api";
 import type { Bug, BugPriority, BugStatus } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
+import { createBrandHeader } from "../utils/brand";
 import { formatDate, statusLabel } from "../utils/formatting";
 import { createThemeToggle } from "../utils/theme";
 
@@ -342,6 +343,7 @@ export async function renderProject(
     const openBugs = bugs.filter((bug) => bug.status !== "completed").length;
     const fixedBugs = bugs.length - openBugs;
     const main = element("main", "page-shell");
+    main.append(createBrandHeader());
 
     const backLink = element("a", "back-link");
     backLink.href = "#/";
