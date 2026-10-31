@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "lint": "eslint .",
     "start": "node dist/server.js",
     "test": "jest --runInBand"
   },
@@ -25,12 +26,18 @@
     "sqlite3": "^6.0.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^26.6.5",
-    "@types/jest": "^30.0.0",
-    "@types/supertest": "^6.0.3",
+    "@babel/core": "^7.29.7",
+    "@babel/eslint-parser": "^7.29.9",
+    "@babel/plugin-syntax-typescript": "^7.29.7",
+    "@eslint/js": "^9.39.5",
     "@swc/core": "^1.13.5",
     "@swc/jest": "^0.2.39",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.5",
+    "@types/supertest": "^6.0.3",
+    "eslint": "^9.39.5",
+    "globals": "^16.5.0",
     "jest": "^30.2.0",
     "supertest": "^7.1.4",
     "typescript": "^7.0.2"
