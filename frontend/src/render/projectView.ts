@@ -6,9 +6,17 @@ import {
   getProject,
   updateBug,
   updateProject,
+  ApiError,
+  getApiErrorMessage,
 } from "../api";
 import type { Bug, BugPriority, BugStatus } from "../types";
-import { element, setText, showMessage, withChildren } from "../utils/dom";
+import {
+  element,
+  setText,
+  showInlineError,
+  showMessage,
+  withChildren,
+} from "../utils/dom";
 import { createBrandHeader } from "../utils/brand";
 import {
   formatDate,
@@ -136,9 +144,12 @@ function createStatusSelect(
       await updateBug(bug.id, { status: select.value as BugStatus });
       await onUpdated();
     } catch (error) {
-      window.alert(
-        error instanceof Error ? error.message : "Unable to update bug.",
-      );
+      const errorMessage = element("span", "row-error");
+      errorMessage.setAttribute("role", "alert");
+      errorMessage.textContent = getApiErrorMessage(error, "Unable to update bug.");
+      select.closest("tr")?.querySelector(".bug-actions")?.append(errorMessage);
+      errorMessage.tabIndex = -1;
+      errorMessage.focus();
       select.disabled = false;
     }
   });
@@ -226,9 +237,12 @@ function createBugRow(
       await deleteBug(bug.id);
       await onDeleted();
     } catch (error) {
-      window.alert(
-        error instanceof Error ? error.message : "Unable to delete bug.",
-      );
+      const errorMessage = element("span", "row-error");
+      errorMessage.setAttribute("role", "alert");
+      errorMessage.textContent = getApiErrorMessage(error, "Unable to delete bug.");
+      actionCell.append(errorMessage);
+      errorMessage.tabIndex = -1;
+      errorMessage.focus();
       editButton.disabled = false;
       deleteButton.disabled = false;
     }
@@ -404,10 +418,9 @@ export async function renderProject(
         await deleteProject(project.id);
         window.location.hash = "#/";
       } catch (error) {
-        window.alert(
-          error instanceof Error
-            ? error.message
-            : "Unable to delete project.",
+        showInlineError(
+          main,
+          getApiErrorMessage(error, "Unable to delete project."),
         );
         deleteProjectButton.disabled = false;
         editProjectButton.disabled = false;
@@ -439,7 +452,10 @@ export async function renderProject(
     const addButton = element("button", "primary-button");
     addButton.type = "submit";
     addButton.textContent = "Add";
-    form.append(titleInput, descriptionInput, prioritySelect, addButton);
+    const addError = element("p", "form-error");
+    addError.setAttribute("role", "alert");
+    addError.hidden = true;
+    form.append(titleInput, descriptionInput, prioritySelect, addButton, addError);
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       addButton.disabled = true;
@@ -452,9 +468,10 @@ export async function renderProject(
         );
         await renderProject(root, projectId);
       } catch (error) {
-        window.alert(
-          error instanceof Error ? error.message : "Unable to add bug.",
-        );
+        addError.textContent = getApiErrorMessage(error, "Unable to add bug.");
+        addError.hidden = false;
+        addError.tabIndex = -1;
+        addError.focus();
         addButton.disabled = false;
       }
     });
@@ -624,10 +641,14 @@ export async function renderProject(
 
     root.replaceChildren(main);
   } catch (error) {
+    const isMissingProject = error instanceof ApiError && error.status === 404;
     showMessage(
       root,
-      error instanceof Error ? error.message : "Unable to load project.",
+      getApiErrorMessage(error, "Unable to load project."),
       "error",
+      isMissingProject
+        ? { label: "Back to projects", onClick: () => { window.location.hash = "#/"; } }
+        : { label: "Retry loading project", onClick: () => void renderProject(root, projectId) },
     );
   }
 }

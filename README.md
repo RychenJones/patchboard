@@ -49,15 +49,6 @@ I found these websites useful in developing this software:
 
 The following items I plan to fix, improve, and/or add to this project in the future:
 
-* [x] Add bug search by title.
-* [x] Add filters for bug status, priority, and open versus completed bugs.
-* [x] Add frontend controls for editing bug titles, descriptions, priorities, and statuses.
-* [x] Add frontend controls for deleting bugs.
-* [x] Add frontend and backend controls for editing project names.
-* [x] Add project deletion with a confirmation warning that associated bugs will also be deleted.
-* [x] Configure Jest and add tests for project creation, validation, bug creation, and status updates.
-* [x] Add ESLint configuration for the backend and frontend.
-* [ ] Improve frontend error messages for unavailable servers, missing projects, and failed saves.
 * [ ] Perform final end-to-end QA and document the results.
 * [ ] Add user authentication and authorization.
 * [ ] Add comments or activity history to bugs.

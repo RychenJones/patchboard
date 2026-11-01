@@ -1,6 +1,12 @@
-import { createProject, getDashboard } from "../api";
+import { createProject, getApiErrorMessage, getDashboard } from "../api";
 import type { DashboardProject } from "../types";
-import { element, setText, showMessage, withChildren } from "../utils/dom";
+import {
+  element,
+  setText,
+  showInlineError,
+  showMessage,
+  withChildren,
+} from "../utils/dom";
 import { createBrandHeader } from "../utils/brand";
 import { createThemeToggle } from "../utils/theme";
 import { priorityLabel } from "../utils/formatting";
@@ -101,8 +107,9 @@ export async function renderDashboard(root: HTMLDivElement): Promise<void> {
         await createProject(name.trim());
         await renderDashboard(root);
       } catch (error) {
-        window.alert(
-          error instanceof Error ? error.message : "Unable to create project.",
+        showInlineError(
+          main,
+          getApiErrorMessage(error, "Unable to create project."),
         );
       }
     });
@@ -134,8 +141,9 @@ export async function renderDashboard(root: HTMLDivElement): Promise<void> {
   } catch (error) {
     showMessage(
       root,
-      error instanceof Error ? error.message : "Unable to load projects.",
+      getApiErrorMessage(error, "Unable to load projects."),
       "error",
+      { label: "Retry loading projects", onClick: () => void renderDashboard(root) },
     );
   }
 }

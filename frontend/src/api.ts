@@ -8,15 +8,64 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
+export type ApiErrorKind =
+  | "network"
+  | "not-found"
+  | "validation"
+  | "server"
+  | "http";
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public readonly kind: ApiErrorKind,
+    public readonly status?: number,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+// Convert classified API failures into concise messages suitable for the UI.
+export function getApiErrorMessage(
+  error: unknown,
+  fallback: string,
+): string {
+  if (!(error instanceof ApiError)) {
+    return error instanceof Error ? error.message : fallback;
+  }
+
+  if (error.kind === "network") {
+    return "The server is unavailable. Make sure the backend is running, then try again.";
+  }
+  if (error.kind === "not-found") {
+    return error.message.toLowerCase().includes("project")
+      ? "This project could not be found. It may have been deleted."
+      : "This record could not be found. It may have been deleted.";
+  }
+  if (error.kind === "server") {
+    return "The server could not complete that request. Please try again.";
+  }
+  return error.message || fallback;
+}
+
 // Send API requests and turn unsuccessful responses into readable errors.
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+  } catch {
+    throw new ApiError(
+      "The server is unavailable.",
+      "network",
+    );
+  }
 
   const contentType = response.headers.get("content-type") ?? "";
   const body = contentType.includes("application/json")
@@ -31,7 +80,15 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
       typeof body.error === "string"
         ? body.error
         : `Request failed with status ${response.status}.`;
-    throw new Error(errorMessage);
+    const kind: ApiErrorKind =
+      response.status === 404
+        ? "not-found"
+        : response.status === 400
+          ? "validation"
+          : response.status >= 500
+            ? "server"
+            : "http";
+    throw new ApiError(errorMessage, kind, response.status);
   }
 
   return body as T;

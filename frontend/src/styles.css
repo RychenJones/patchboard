@@ -684,8 +684,38 @@ tbody tr:last-child td {
   text-align: center;
 }
 
+.page-state-content {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  max-width: 480px;
+}
+
+.page-state-content p {
+  margin: 0;
+}
+
 .page-state.error {
   color: #a9232b;
+}
+
+.inline-error,
+.row-error {
+  margin: 0;
+  color: #a9232b;
+  font-size: 0.9rem;
+}
+
+.inline-error {
+  padding: 12px 16px;
+  border: 1px solid #e3a3a7;
+  border-radius: 8px;
+  background: #fff4f4;
+}
+
+.row-error {
+  display: block;
+  margin-top: 8px;
 }
 
 .empty-panel {
@@ -851,6 +881,16 @@ html[data-theme="dark"] .delete-button:hover {
 
 html[data-theme="dark"] .page-state.error {
   color: #ff9a9f;
+}
+
+html[data-theme="dark"] .inline-error,
+html[data-theme="dark"] .row-error {
+  color: #ff9a9f;
+}
+
+html[data-theme="dark"] .inline-error {
+  border-color: #8f555b;
+  background: #321f25;
 }
 
 @media (max-width: 760px) {
