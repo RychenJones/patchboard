@@ -1,5 +1,6 @@
 import type { ErrorRequestHandler } from "express";
 
+// Convert application failures into consistent JSON error responses.
 const errorHandler: ErrorRequestHandler = (error, request, response, next) => {
   if (response.headersSent) {
     next(error);

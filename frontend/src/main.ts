@@ -12,6 +12,7 @@ if (!appRootCandidate) {
 const appRoot = appRootCandidate;
 applySavedTheme();
 
+// Render the project or dashboard view selected by the current URL hash.
 function renderRoute(): void {
   const match = window.location.hash.match(/^#\/projects\/(\d+)$/);
   if (match?.[1]) {

@@ -6,6 +6,7 @@ import type {
   UpdateProjectInput,
 } from "../models/project";
 
+// Give project validation and missing-record failures clear API status codes.
 class ProjectValidationError extends AppError {
   constructor(message: string) {
     super(message, 400);
@@ -20,6 +21,7 @@ class ProjectNotFoundError extends AppError {
   }
 }
 
+// Convert a route parameter into a validated positive project ID.
 function parseProjectId(projectId: unknown): number {
   if (typeof projectId !== "string" || !/^\d+$/.test(projectId)) {
     throw new ProjectValidationError("Project ID must be a positive integer.");
@@ -33,6 +35,7 @@ function parseProjectId(projectId: unknown): number {
   return parsedProjectId;
 }
 
+// Trim a project name and reject missing or blank values.
 function validateProjectName(name: unknown): string {
   if (typeof name !== "string" || name.trim().length === 0) {
     throw new ProjectValidationError("Project name is required.");
@@ -41,11 +44,13 @@ function validateProjectName(name: unknown): string {
   return name.trim();
 }
 
+// Validate a new project name before creating the project record.
 function createProject(input: Partial<CreateProjectInput>): Promise<Project> {
   const name = validateProjectName(input.name);
   return projectRepository.createProject(name);
 }
 
+// Validate the required name field for a project update request.
 function validateUpdateInput(input: unknown): UpdateProjectInput {
   if (typeof input !== "object" || input === null || Array.isArray(input)) {
     throw new ProjectValidationError("Project update must be a JSON object.");
@@ -61,10 +66,12 @@ function validateUpdateInput(input: unknown): UpdateProjectInput {
   return { name: validateProjectName(update.name) };
 }
 
+// Retrieve all projects from the repository.
 function listProjects(): Promise<Project[]> {
   return projectRepository.listProjects();
 }
 
+// Validate and apply updates to an existing project.
 async function updateProject(
   projectIdInput: unknown,
   input: unknown,
@@ -80,6 +87,7 @@ async function updateProject(
   return project;
 }
 
+// Retrieve one project after validating its identifier.
 async function getProject(projectIdInput: unknown): Promise<Project> {
   const projectId = parseProjectId(projectIdInput);
   const project = await projectRepository.getProject(projectId);
@@ -91,6 +99,7 @@ async function getProject(projectIdInput: unknown): Promise<Project> {
   return project;
 }
 
+// Delete a project after confirming that it exists.
 async function deleteProject(projectIdInput: unknown): Promise<void> {
   const projectId = parseProjectId(projectIdInput);
   const deleted = await projectRepository.deleteProject(projectId);

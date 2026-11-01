@@ -22,7 +22,9 @@ interface DashboardBugRow extends DashboardBug {
   projectId: number;
 }
 
+// Aggregate project totals and select the next open bug for each project.
 async function getDashboard(): Promise<Dashboard> {
+  // Gather project-level counts and the open bugs used for next-up cards.
   const projectRows = await queryAll<DashboardProjectRow>(
     `SELECT p.id,
             p.name,
@@ -63,6 +65,7 @@ async function getDashboard(): Promise<Dashboard> {
   );
 
   const nextUpByProject = new Map<number, DashboardBug>();
+  // Keep only the highest-priority open bug selected for each project.
   for (const bug of nextUpRows) {
     if (!nextUpByProject.has(bug.projectId)) {
       const { projectId: _projectId, ...dashboardBug } = bug;

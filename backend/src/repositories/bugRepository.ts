@@ -9,6 +9,7 @@ import type {
 
 const { database } = databaseModule;
 
+// Check whether a project exists before creating or listing its bugs.
 function projectExists(projectId: number): Promise<boolean> {
   return new Promise((resolve, reject) => {
     database.get<{ id: number }>(
@@ -26,6 +27,7 @@ function projectExists(projectId: number): Promise<boolean> {
   });
 }
 
+// Insert a bug and read back the complete created record.
 function createBug(
   projectId: number,
   title: string,
@@ -75,6 +77,7 @@ function createBug(
   });
 }
 
+// Retrieve a project's bugs in creation order.
 function listBugs(projectId: number): Promise<Bug[]> {
   return new Promise((resolve, reject) => {
     database.all<Bug>(
@@ -102,6 +105,7 @@ function listBugs(projectId: number): Promise<Bug[]> {
   });
 }
 
+// Retrieve one bug by ID or return null when it is missing.
 function getBug(bugId: number): Promise<Bug | null> {
   return new Promise((resolve, reject) => {
     database.get<Bug>(
@@ -128,10 +132,12 @@ function getBug(bugId: number): Promise<Bug | null> {
   });
 }
 
+// Update only the bug fields supplied by the caller.
 async function updateBug(
   bugId: number,
   updates: UpdateBugInput,
 ): Promise<Bug | null> {
+  // Build the update statement from fields that were actually supplied.
   const fields: string[] = [];
   const parameters: unknown[] = [];
 
@@ -179,6 +185,7 @@ async function updateBug(
   return getBug(bugId);
 }
 
+// Delete a bug and report whether a row was removed.
 function deleteBug(bugId: number): Promise<boolean> {
   return new Promise((resolve, reject) => {
     database.run(

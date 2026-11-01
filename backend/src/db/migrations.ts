@@ -34,6 +34,7 @@ const migrationStatements = [
     END`,
 ];
 
+// Add the priority column when upgrading an older bugs table.
 async function addPriorityToExistingBugs(): Promise<void> {
   const columns = await queryAll<{ name: string }>("PRAGMA table_info(bugs)");
   if (columns.some((column) => column.name === "priority")) {
@@ -47,6 +48,7 @@ async function addPriorityToExistingBugs(): Promise<void> {
   );
 }
 
+// Apply schema setup and compatibility migrations in order.
 async function runMigrations(): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     database.serialize(async () => {

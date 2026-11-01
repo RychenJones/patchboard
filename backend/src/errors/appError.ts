@@ -1,3 +1,4 @@
+// Carry a client-safe message together with its HTTP status code.
 class AppError extends Error {
   readonly statusCode: number;
 

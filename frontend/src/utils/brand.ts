@@ -1,5 +1,6 @@
 import { element, setText } from "./dom";
 
+// Build the PatchBoard brand link used across application pages.
 export function createBrandHeader(): HTMLElement {
   const header = element("nav", "brand-header");
   header.setAttribute("aria-label", "Primary navigation");

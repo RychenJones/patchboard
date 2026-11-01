@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import projectService = require("../services/projectService");
 
+// Create a project and return the new record to the client.
 async function createProject(
   request: Request,
   response: Response,
@@ -14,6 +15,7 @@ async function createProject(
   }
 }
 
+// List all projects for the dashboard.
 async function listProjects(
   request: Request,
   response: Response,
@@ -27,6 +29,7 @@ async function listProjects(
   }
 }
 
+// Load one project and return it to the client.
 async function getProject(
   request: Request,
   response: Response,
@@ -40,6 +43,7 @@ async function getProject(
   }
 }
 
+// Apply a new name to an existing project.
 async function updateProject(
   request: Request,
   response: Response,
@@ -56,6 +60,7 @@ async function updateProject(
   }
 }
 
+// Delete a project and return an empty successful response.
 async function deleteProject(
   request: Request,
   response: Response,

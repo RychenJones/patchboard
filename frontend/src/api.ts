@@ -8,6 +8,7 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
+// Send API requests and turn unsuccessful responses into readable errors.
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
@@ -36,18 +37,23 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return body as T;
 }
 
+// Load and modify dashboard and project records through the backend API.
+// Fetch the dashboard summary for the overview screen.
 export function getDashboard(): Promise<Dashboard> {
   return request<Dashboard>("/api/dashboard");
 }
 
+// Fetch one project by its numeric identifier.
 export function getProject(projectId: number): Promise<Project> {
   return request<Project>(`/api/projects/${projectId}`);
 }
 
+// Fetch all bugs belonging to a project.
 export function getBugs(projectId: number): Promise<Bug[]> {
   return request<Bug[]>(`/api/projects/${projectId}/bugs`);
 }
 
+// Create a project from its submitted name.
 export function createProject(name: string): Promise<Project> {
   return request<Project>("/api/projects", {
     method: "POST",
@@ -55,6 +61,7 @@ export function createProject(name: string): Promise<Project> {
   });
 }
 
+// Rename an existing project through the backend API.
 export function updateProject(projectId: number, name: string): Promise<Project> {
   return request<Project>(`/api/projects/${projectId}`, {
     method: "PATCH",
@@ -62,12 +69,15 @@ export function updateProject(projectId: number, name: string): Promise<Project>
   });
 }
 
+// Delete a project and return when the request succeeds.
 export function deleteProject(projectId: number): Promise<void> {
   return request<void>(`/api/projects/${projectId}`, {
     method: "DELETE",
   });
 }
 
+// Create, update, and remove bugs through the backend API.
+// Create a bug with its title, priority, and optional description.
 export function createBug(
   projectId: number,
   title: string,
@@ -80,6 +90,7 @@ export function createBug(
   });
 }
 
+// Apply one or more editable fields to an existing bug.
 export function updateBug(
   bugId: number,
   updates: {
@@ -95,6 +106,7 @@ export function updateBug(
   });
 }
 
+// Delete a bug and return when the request succeeds.
 export function deleteBug(bugId: number): Promise<void> {
   return request<void>(`/api/bugs/${bugId}`, {
     method: "DELETE",

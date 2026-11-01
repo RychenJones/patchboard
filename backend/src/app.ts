@@ -9,6 +9,7 @@ const app = express();
 
 const frontendOrigin = process.env.FRONTEND_ORIGIN ?? "http://localhost:5173";
 
+// Apply CORS headers and answer browser preflight requests.
 app.use((request, response, next) => {
   response.setHeader("Access-Control-Allow-Origin", frontendOrigin);
   response.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,OPTIONS");
@@ -24,6 +25,7 @@ app.use((request, response, next) => {
 
 app.use(express.json());
 
+// Provide a simple health response for the root route.
 app.get("/", (req, res) => {
   res.send("Hello, Express!");
 });

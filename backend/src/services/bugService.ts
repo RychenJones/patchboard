@@ -13,6 +13,7 @@ import type {
 const { isBugStatus } = sharedStatusModule.default;
 const { isBugPriority } = sharedPriorityModule.default;
 
+// Report malformed bug input with a client error status.
 class BugValidationError extends AppError {
   constructor(message: string) {
     super(message, 400);
@@ -20,6 +21,7 @@ class BugValidationError extends AppError {
   }
 }
 
+// Report requests that reference a missing project.
 class ProjectNotFoundError extends AppError {
   constructor(message: string) {
     super(message, 404);
@@ -27,6 +29,7 @@ class ProjectNotFoundError extends AppError {
   }
 }
 
+// Report requests that reference a missing bug.
 class BugNotFoundError extends AppError {
   constructor(message: string) {
     super(message, 404);
@@ -34,6 +37,7 @@ class BugNotFoundError extends AppError {
   }
 }
 
+// Convert a route parameter into a validated positive ID.
 function parseId(value: unknown, label: string): number {
   if (typeof value !== "string" || !/^\d+$/.test(value)) {
     throw new BugValidationError(`${label} must be a positive integer.`);
@@ -47,6 +51,7 @@ function parseId(value: unknown, label: string): number {
   return parsedId;
 }
 
+// Trim a bug title and reject missing or blank values.
 function validateTitle(title: unknown): string {
   if (typeof title !== "string" || title.trim().length === 0) {
     throw new BugValidationError("Bug title is required.");
@@ -55,6 +60,7 @@ function validateTitle(title: unknown): string {
   return title.trim();
 }
 
+// Normalize an optional description and reject non-string input.
 function validateDescription(description: unknown): string | null {
   if (description === undefined || description === null) {
     return null;
@@ -67,6 +73,7 @@ function validateDescription(description: unknown): string | null {
   return description.trim() || null;
 }
 
+// Validate a status value and apply the default status when omitted.
 function validateStatus(status: unknown): BugStatus {
   if (status !== undefined && !isBugStatus(status)) {
     throw new BugValidationError(
@@ -77,6 +84,7 @@ function validateStatus(status: unknown): BugStatus {
   return status ?? "incomplete";
 }
 
+// Validate a priority value and apply the default priority when omitted.
 function validatePriority(priority: unknown): BugPriority {
   if (priority !== undefined && !isBugPriority(priority)) {
     throw new BugValidationError(
@@ -87,6 +95,7 @@ function validatePriority(priority: unknown): BugPriority {
   return priority ?? "medium";
 }
 
+// Validate and normalize the fields supplied for a bug update.
 function validateUpdateInput(input: unknown): UpdateBugInput {
   if (typeof input !== "object" || input === null || Array.isArray(input)) {
     throw new BugValidationError("Bug update must be a JSON object.");
@@ -128,16 +137,19 @@ function validateUpdateInput(input: unknown): UpdateBugInput {
   return validatedUpdate;
 }
 
+// Confirm that a project exists before accessing its bugs.
 async function ensureProjectExists(projectId: number): Promise<void> {
   if (!(await bugRepository.projectExists(projectId))) {
     throw new ProjectNotFoundError("Project not found.");
   }
 }
 
+// Validate input and create a bug in the requested project.
 async function createBug(
   projectIdInput: unknown,
   input: Partial<CreateBugInput>,
 ): Promise<Bug> {
+  // Confirm the project before validating and inserting the bug.
   const projectId = parseId(projectIdInput, "Project ID");
   await ensureProjectExists(projectId);
 
@@ -155,16 +167,19 @@ async function createBug(
   );
 }
 
+// Validate the project and retrieve all of its bugs.
 async function listBugs(projectIdInput: unknown): Promise<Bug[]> {
   const projectId = parseId(projectIdInput, "Project ID");
   await ensureProjectExists(projectId);
   return bugRepository.listBugs(projectId);
 }
 
+// Validate requested changes and update an existing bug.
 async function updateBug(
   bugIdInput: unknown,
   input: unknown,
 ): Promise<Bug> {
+  // Validate the identifier and editable fields before updating storage.
   const bugId = parseId(bugIdInput, "Bug ID");
   const updates = validateUpdateInput(input);
   const bug = await bugRepository.updateBug(bugId, updates);
@@ -176,6 +191,7 @@ async function updateBug(
   return bug;
 }
 
+// Delete a bug after validating that it exists.
 async function deleteBug(bugIdInput: unknown): Promise<void> {
   const bugId = parseId(bugIdInput, "Bug ID");
   const deleted = await bugRepository.deleteBug(bugId);

@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import dashboardService = require("../services/dashboardService");
 
+// Load dashboard data and send it to the client.
 async function getDashboard(
   request: Request,
   response: Response,

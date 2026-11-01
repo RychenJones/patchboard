@@ -3,6 +3,7 @@ import migrations = require("./db/migrations");
 
 const port = 3000;
 
+// Run database migrations before accepting API requests.
 async function startServer(): Promise<void> {
   try {
     await migrations.runMigrations();

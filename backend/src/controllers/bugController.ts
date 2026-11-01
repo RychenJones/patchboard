@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import bugService = require("../services/bugService");
 
+// Create a bug and return the new record to the client.
 async function createBug(
   request: Request,
   response: Response,
@@ -17,6 +18,7 @@ async function createBug(
   }
 }
 
+// List all bugs that belong to the requested project.
 async function listBugs(
   request: Request,
   response: Response,
@@ -30,6 +32,7 @@ async function listBugs(
   }
 }
 
+// Apply requested changes to an existing bug.
 async function updateBug(
   request: Request,
   response: Response,
@@ -46,6 +49,7 @@ async function updateBug(
   }
 }
 
+// Delete a bug and return an empty successful response.
 async function deleteBug(
   request: Request,
   response: Response,

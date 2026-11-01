@@ -3,15 +3,18 @@ import { element } from "./dom";
 const THEME_STORAGE_KEY = "patchboard-theme";
 type Theme = "light" | "dark";
 
+// Apply the selected theme to the document root.
 function applyTheme(theme: Theme): void {
   document.documentElement.dataset.theme = theme;
 }
 
+// Restore the user's saved theme or default to light mode.
 export function applySavedTheme(): void {
   const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
   applyTheme(savedTheme === "dark" ? "dark" : "light");
 }
 
+// Build a theme switch that persists the user's selection.
 export function createThemeToggle(): HTMLButtonElement {
   const button = element("button", "theme-toggle");
   button.type = "button";

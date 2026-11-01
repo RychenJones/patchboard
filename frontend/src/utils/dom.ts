@@ -1,3 +1,4 @@
+// Create an element and optionally assign its CSS class.
 export function element<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   className?: string,
@@ -9,11 +10,13 @@ export function element<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 
+// Set safe text content and return the updated element.
 export function setText<T extends HTMLElement>(node: T, text: string): T {
   node.textContent = text;
   return node;
 }
 
+// Append child nodes and return the parent element.
 export function withChildren<T extends HTMLElement>(
   node: T,
   ...children: Node[]
@@ -22,6 +25,7 @@ export function withChildren<T extends HTMLElement>(
   return node;
 }
 
+// Replace the page with a loading, error, or empty state.
 export function showMessage(
   root: HTMLDivElement,
   message: string,

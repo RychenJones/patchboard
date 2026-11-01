@@ -10,6 +10,7 @@ const projectSelect = `
          strftime('%Y-%m-%dT%H:%M:%fZ', created_at) AS createdAt
   FROM projects`;
 
+// Insert a project and read back the complete created record.
 function createProject(name: string): Promise<Project> {
   return new Promise((resolve, reject) => {
     database.run(
@@ -44,6 +45,7 @@ function createProject(name: string): Promise<Project> {
   });
 }
 
+// Retrieve all projects in creation order.
 function listProjects(): Promise<Project[]> {
   return new Promise((resolve, reject) => {
     database.all<Project>(
@@ -61,6 +63,7 @@ function listProjects(): Promise<Project[]> {
   });
 }
 
+// Retrieve one project by ID or return null when it is missing.
 function getProject(projectId: number): Promise<Project | null> {
   return new Promise((resolve, reject) => {
     database.get<Project>(
@@ -79,10 +82,12 @@ function getProject(projectId: number): Promise<Project | null> {
   });
 }
 
+// Update the project fields supplied by the caller.
 async function updateProject(
   projectId: number,
   updates: UpdateProjectInput,
 ): Promise<Project | null> {
+  // Build the update statement from fields that were actually supplied.
   const fields: string[] = [];
   const parameters: unknown[] = [];
 
@@ -114,6 +119,7 @@ async function updateProject(
   return getProject(projectId);
 }
 
+// Delete a project and report whether a row was removed.
 function deleteProject(projectId: number): Promise<boolean> {
   return new Promise((resolve, reject) => {
     database.run(

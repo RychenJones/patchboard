@@ -25,6 +25,7 @@ const priorityOrder: BugPriority[] = [...BUG_PRIORITY_OPTIONS]
   .reverse()
   .map(([value]) => value);
 
+// Build the project heading, subtitle, and theme controls.
 function createHeader(title: string, subtitle: string): HTMLElement {
   const header = element("header", "page-header");
   const copy = element("div");
@@ -36,11 +37,13 @@ function createHeader(title: string, subtitle: string): HTMLElement {
   return header;
 }
 
+// Build the project rename dialog and handle its save state.
 function createProjectEditDialog(
   projectId: number,
   currentName: string,
   onSaved: () => Promise<void>,
 ): HTMLDialogElement {
+  // Build the form controls before wiring validation and save behavior.
   const dialog = element("dialog", "project-edit-dialog");
   const titleId = `project-edit-title-${projectId}`;
   dialog.setAttribute("aria-labelledby", titleId);
@@ -72,6 +75,7 @@ function createProjectEditDialog(
 
   form.append(label, errorMessage, actions);
   form.addEventListener("submit", async (event) => {
+    // Validate locally, then disable controls during the save request.
     event.preventDefault();
     const name = input.value.trim();
     if (!name) {
@@ -104,6 +108,7 @@ function createProjectEditDialog(
   return dialog;
 }
 
+// Render a bug priority as a styled text badge.
 function createPriorityBadge(priority: BugPriority): HTMLElement {
   return setText(
     element("span", `priority-badge ${priority}`),
@@ -111,6 +116,7 @@ function createPriorityBadge(priority: BugPriority): HTMLElement {
   );
 }
 
+// Build a status selector that saves changes immediately.
 function createStatusSelect(
   bug: Bug,
   onUpdated: () => Promise<void>,
@@ -139,6 +145,7 @@ function createStatusSelect(
   return select;
 }
 
+// Build a dialog containing a bug's full details.
 function createBugDetailsDialog(bug: Bug): HTMLDialogElement {
   const dialog = element("dialog", "bug-details-dialog");
   const titleId = `bug-details-title-${bug.id}`;
@@ -174,6 +181,7 @@ function createBugDetailsDialog(bug: Bug): HTMLDialogElement {
   return dialog;
 }
 
+// Render a bug row with details, editing, and deletion actions.
 function createBugRow(
   bug: Bug,
   onUpdated: () => Promise<void>,
@@ -230,11 +238,13 @@ function createBugRow(
   return row;
 }
 
+// Render the inline bug editor and handle its save state.
 function createBugEditRow(
   bug: Bug,
   onSaved: () => Promise<void>,
   onCancel: () => void,
 ): HTMLTableRowElement {
+  // Build editable controls from the bug's current values.
   const row = element("tr", "bug-edit-row");
   const cell = element("td");
   cell.colSpan = 5;
@@ -302,6 +312,7 @@ function createBugEditRow(
     errorMessage,
   );
   form.addEventListener("submit", async (event) => {
+    // Validate the title before submitting the edited bug.
     event.preventDefault();
     const title = titleInput.value.trim();
     if (!title) {
@@ -337,10 +348,12 @@ function createBugEditRow(
   return row;
 }
 
+// Load project data and render its bugs, filters, and actions.
 export async function renderProject(
   root: HTMLDivElement,
   projectId: number,
 ): Promise<void> {
+  // Load project metadata and bugs before constructing the page.
   showMessage(root, "Loading project…", "loading");
 
   try {
@@ -348,6 +361,7 @@ export async function renderProject(
       getProject(projectId),
       getBugs(projectId),
     ]);
+    // Derive the summary counts used by the project heading.
     const openBugs = bugs.filter((bug) => bug.status !== "completed").length;
     const fixedBugs = bugs.length - openBugs;
     const main = element("main", "page-shell");
@@ -402,6 +416,7 @@ export async function renderProject(
     pageHeader?.querySelector(".header-actions")?.append(deleteProjectButton);
     main.append(editProjectDialog);
 
+    // Build the quick-add form for creating a bug from the project page.
     const form = element("form", "quick-add");
     const titleInput = element("input");
     titleInput.type = "text";
@@ -453,6 +468,7 @@ export async function renderProject(
         ),
       );
     } else {
+      // Build search and filter controls for the loaded bug list.
       const searchLabel = element("label", "search-field");
       searchLabel.append(setText(element("span"), "Search bugs by title"));
       const searchInput = element("input");
@@ -552,6 +568,7 @@ export async function renderProject(
       const body = element("tbody");
       const refresh = () => renderProject(root, projectId);
 
+      // Re-render rows whenever the search or filter state changes.
       const renderRows = (): void => {
         const searchTerm = searchInput.value.trim().toLowerCase();
         const matchingBugs = bugs.filter((bug) =>

@@ -12,6 +12,7 @@ const priorityOrder: BugPriority[] = [...BUG_PRIORITY_OPTIONS]
   .reverse()
   .map(([value]) => value);
 
+// Build the page heading, subtitle, and theme controls.
 function createHeader(title: string, subtitle: string): HTMLElement {
   const header = element("header", "page-header");
   const copy = element("div");
@@ -23,6 +24,7 @@ function createHeader(title: string, subtitle: string): HTMLElement {
   return header;
 }
 
+// Visualize the project's open bugs by priority.
 function createPriorityBar(project: DashboardProject): HTMLElement {
   const bar = element("div", "priority-bar");
   const total = project.openBugCount;
@@ -42,6 +44,7 @@ function createPriorityBar(project: DashboardProject): HTMLElement {
   return bar;
 }
 
+// Build a clickable summary card for one project.
 function createProjectCard(project: DashboardProject): HTMLElement {
   const card = element("button", "project-card");
   card.type = "button";
@@ -74,10 +77,13 @@ function createProjectCard(project: DashboardProject): HTMLElement {
   return card;
 }
 
+// Load dashboard data and render the project overview.
 export async function renderDashboard(root: HTMLDivElement): Promise<void> {
+  // Show immediate feedback while the dashboard request is pending.
   showMessage(root, "Loading projects…", "loading");
 
   try {
+    // Build the page from the returned project summaries.
     const dashboard = await getDashboard();
     const main = element("main", "page-shell");
     main.append(createBrandHeader());
