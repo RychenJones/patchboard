@@ -45,7 +45,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 10/29/26 | 7:05     | TP     | Added save/hide buttons, worked on AWS.    | 60          |
 | 10/30/26 | 10:15    | MTG    | Individual presentations.                  | 60          |
 | 10/31/26 | 5:25     | IM     | Add header, shared foler, start submission.| 100         |
-| 10/31/26 | 8:07     | IM     |                                            |             |
+| 10/31/26 | 8:25     | IM     | Better error messages, submission video.   | 20          |
 |          |          |        |                                            |             |
 |          |          |        |                                            |             |
 
@@ -56,7 +56,7 @@ _Note: Add more rows as needed._
 
 |Categroy                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         | 9:40/10                  |
+|IM - Individual Module         | 10:00/10                  |
 |TP - Team Project              | 4:00/4                   |
 |MTG - Class Meetings           | 4:00/4                   |
-|**TOTAL**                      | 17:00/18                 |
+|**TOTAL**                      | 18:00/18                 |
