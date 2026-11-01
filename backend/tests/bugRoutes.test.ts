@@ -44,7 +44,7 @@ describe("bug routes", () => {
     );
   });
 
-  it("rejects a bug with a blank title or invalid status", async () => {
+  it("rejects a bug with a blank title or invalid status or priority", async () => {
     const projectId = await createProject();
     const blankTitleResponse = await request(app)
       .post(`/api/projects/${projectId}/bugs`)
@@ -52,12 +52,19 @@ describe("bug routes", () => {
     const invalidStatusResponse = await request(app)
       .post(`/api/projects/${projectId}/bugs`)
       .send({ title: "Valid title", status: "closed" });
+    const invalidPriorityResponse = await request(app)
+      .post(`/api/projects/${projectId}/bugs`)
+      .send({ title: "Valid title", priority: "urgent" });
 
     expect(blankTitleResponse.status).toBe(400);
     expect(blankTitleResponse.body).toEqual({ error: "Bug title is required." });
     expect(invalidStatusResponse.status).toBe(400);
     expect(invalidStatusResponse.body).toEqual({
       error: "Bug status must be incomplete, in-progress, or completed.",
+    });
+    expect(invalidPriorityResponse.status).toBe(400);
+    expect(invalidPriorityResponse.body).toEqual({
+      error: "Bug priority must be low, medium, or high.",
     });
   });
 

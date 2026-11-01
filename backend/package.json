@@ -4,9 +4,9 @@
   "description": "PatchBoard is a basic applicaiton to keep track of software projects and their known bugs and problems waiting to be patched. Each issue has a status indicator indicating whether it is waiting for a patch, in progress, or patched.",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc -p tsconfig.shared.json && cp dist-cjs/shared/bugStatuses.js dist/shared/bugStatuses.js && cp dist-cjs/shared/bugPriorities.js dist/shared/bugPriorities.js && rm -rf dist-cjs",
     "lint": "eslint .",
-    "start": "node dist/server.js",
+    "start": "node dist/backend/src/server.js",
     "test": "jest --runInBand"
   },
   "repository": {

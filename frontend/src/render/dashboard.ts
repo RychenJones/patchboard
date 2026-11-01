@@ -3,8 +3,14 @@ import type { DashboardProject } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
 import { createBrandHeader } from "../utils/brand";
 import { createThemeToggle } from "../utils/theme";
+import { priorityLabel } from "../utils/formatting";
+import type { BugPriority } from "../types";
+const sharedPriorityModule = (await import("../../../shared/bugPriorities")).default;
+const { BUG_PRIORITY_OPTIONS } = sharedPriorityModule;
 
-const priorityOrder = ["high", "medium", "low"] as const;
+const priorityOrder: BugPriority[] = [...BUG_PRIORITY_OPTIONS]
+  .reverse()
+  .map(([value]) => value);
 
 function createHeader(title: string, subtitle: string): HTMLElement {
   const header = element("header", "page-header");
@@ -25,7 +31,7 @@ function createPriorityBar(project: DashboardProject): HTMLElement {
     const segment = element("span", `priority-segment ${priority}`);
     const count = project.priorityCounts[priority];
     segment.style.width = total === 0 ? "0%" : `${(count / total) * 100}%`;
-    segment.setAttribute("aria-label", `${count} ${priority} bugs`);
+    segment.setAttribute("aria-label", `${count} ${priorityLabel(priority)} bugs`);
     bar.append(segment);
   }
 
@@ -52,7 +58,7 @@ function createProjectCard(project: DashboardProject): HTMLElement {
 
   const summary = priorityOrder
     .filter((priority) => project.priorityCounts[priority] > 0)
-    .map((priority) => `${project.priorityCounts[priority]} ${priority}`)
+    .map((priority) => `${project.priorityCounts[priority]} ${priorityLabel(priority)}`)
     .join(" · ");
   card.append(
     setText(element("p", "priority-summary"), summary || "No open bugs"),

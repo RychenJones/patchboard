@@ -1,5 +1,7 @@
-export type BugPriority = "low" | "medium" | "high";
-export type BugStatus = "incomplete" | "in-progress" | "completed";
+export type { BugPriority } from "../../shared/bugPriorities";
+import type { BugPriority } from "../../shared/bugPriorities";
+export type { BugStatus } from "../../shared/bugStatuses";
+import type { BugStatus } from "../../shared/bugStatuses";
 
 export interface Project {
   id: number;

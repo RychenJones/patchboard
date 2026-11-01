@@ -10,10 +10,20 @@ import {
 import type { Bug, BugPriority, BugStatus } from "../types";
 import { element, setText, showMessage, withChildren } from "../utils/dom";
 import { createBrandHeader } from "../utils/brand";
-import { formatDate, statusLabel } from "../utils/formatting";
+import {
+  formatDate,
+  priorityLabel as formatPriorityLabel,
+  statusLabel,
+} from "../utils/formatting";
 import { createThemeToggle } from "../utils/theme";
+const sharedStatusModule = (await import("../../../shared/bugStatuses")).default;
+const sharedPriorityModule = (await import("../../../shared/bugPriorities")).default;
+const { BUG_STATUS_OPTIONS } = sharedStatusModule;
+const { BUG_PRIORITY_OPTIONS } = sharedPriorityModule;
 
-const priorityOrder: BugPriority[] = ["high", "medium", "low"];
+const priorityOrder: BugPriority[] = [...BUG_PRIORITY_OPTIONS]
+  .reverse()
+  .map(([value]) => value);
 
 function createHeader(title: string, subtitle: string): HTMLElement {
   const header = element("header", "page-header");
@@ -95,7 +105,10 @@ function createProjectEditDialog(
 }
 
 function createPriorityBadge(priority: BugPriority): HTMLElement {
-  return setText(element("span", `priority-badge ${priority}`), priority);
+  return setText(
+    element("span", `priority-badge ${priority}`),
+    formatPriorityLabel(priority),
+  );
 }
 
 function createStatusSelect(
@@ -103,11 +116,10 @@ function createStatusSelect(
   onUpdated: () => Promise<void>,
 ): HTMLSelectElement {
   const select = element("select", "status-select");
-  const statuses: BugStatus[] = ["incomplete", "in-progress", "completed"];
-  for (const status of statuses) {
+  for (const [status, label] of BUG_STATUS_OPTIONS) {
     const option = element("option");
     option.value = status;
-    option.textContent = statusLabel(status);
+    option.textContent = label;
     option.selected = bug.status === status;
     select.append(option);
   }
@@ -250,7 +262,7 @@ function createBugEditRow(
   for (const priority of priorityOrder) {
     const option = element("option");
     option.value = priority;
-    option.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+    option.textContent = formatPriorityLabel(priority);
     option.selected = priority === bug.priority;
     prioritySelect.append(option);
   }
@@ -259,14 +271,10 @@ function createBugEditRow(
   const statusField = element("label", "edit-field");
   statusField.append(setText(element("span"), "Status"));
   const statusSelect = element("select");
-  for (const status of [
-    "incomplete",
-    "in-progress",
-    "completed",
-  ] as BugStatus[]) {
+  for (const [status, label] of BUG_STATUS_OPTIONS) {
     const option = element("option");
     option.value = status;
-    option.textContent = statusLabel(status);
+    option.textContent = label;
     option.selected = status === bug.status;
     statusSelect.append(option);
   }
@@ -409,7 +417,7 @@ export async function renderProject(
     for (const priority of priorityOrder.slice().reverse()) {
       const option = element("option");
       option.value = priority;
-      option.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+    option.textContent = formatPriorityLabel(priority);
       option.selected = priority === "medium";
       prioritySelect.append(option);
     }
@@ -461,12 +469,11 @@ export async function renderProject(
       statusFilterLabel.append(setText(element("span"), "Status"));
       const statusFilter = element("select");
       statusFilter.setAttribute("aria-label", "Filter bugs by status");
-      for (const [value, label] of [
-        ["all", "All statuses"],
-        ["incomplete", "Incomplete"],
-        ["in-progress", "In progress"],
-        ["completed", "Completed"],
-      ] as const) {
+      const allStatusesOption = element("option");
+      allStatusesOption.value = "all";
+      allStatusesOption.textContent = "All statuses";
+      statusFilter.append(allStatusesOption);
+      for (const [value, label] of BUG_STATUS_OPTIONS) {
         const option = element("option");
         option.value = value;
         option.textContent = label;
@@ -478,12 +485,11 @@ export async function renderProject(
       priorityFilterLabel.append(setText(element("span"), "Priority"));
       const priorityFilter = element("select");
       priorityFilter.setAttribute("aria-label", "Filter bugs by priority");
-      for (const [value, label] of [
-        ["all", "All priorities"],
-        ["high", "High"],
-        ["medium", "Medium"],
-        ["low", "Low"],
-      ] as const) {
+      const allPrioritiesOption = element("option");
+      allPrioritiesOption.value = "all";
+      allPrioritiesOption.textContent = "All priorities";
+      priorityFilter.append(allPrioritiesOption);
+      for (const [value, label] of [...BUG_PRIORITY_OPTIONS].reverse()) {
         const option = element("option");
         option.value = value;
         option.textContent = label;

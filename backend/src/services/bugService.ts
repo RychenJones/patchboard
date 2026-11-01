@@ -1,6 +1,7 @@
 import AppError = require("../errors/appError");
-import statusModule = require("../constants/bugStatuses");
 import bugRepository = require("../repositories/bugRepository");
+import sharedStatusModule = require("../../../shared/bugStatuses");
+import sharedPriorityModule = require("../../../shared/bugPriorities");
 import type {
   Bug,
   BugPriority,
@@ -9,7 +10,8 @@ import type {
   UpdateBugInput,
 } from "../models/bug";
 
-const { isBugPriority, isBugStatus } = statusModule;
+const { isBugStatus } = sharedStatusModule.default;
+const { isBugPriority } = sharedPriorityModule.default;
 
 class BugValidationError extends AppError {
   constructor(message: string) {

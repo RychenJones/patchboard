@@ -1,3 +1,5 @@
+import type { BugPriority } from "../../../shared/bugPriorities";
+
 export interface Project {
   id: number;
   name: string;
@@ -21,7 +23,7 @@ export interface PriorityCounts {
 export interface DashboardBug {
   id: number;
   title: string;
-  priority: "low" | "medium" | "high";
+  priority: BugPriority;
   status: "incomplete" | "in-progress" | "completed";
   createdAt: string;
 }
